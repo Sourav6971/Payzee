@@ -16,15 +16,14 @@ const userSchema = zod.object({
 
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-  const validateSchema = userSchema.safeParse({
+  const { success } = userSchema.safeParse({
     firstName,
     lastName,
     username,
     password,
   });
-  console.log(validateSchema);
 
-  if (!validateSchema.success) {
+  if (!success) {
     res.json({
       msg: "Enter correct format",
     });
@@ -69,8 +68,13 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.put("/update_password", authMiddleware, async (req, res) => {
+router.put("/update_user", authMiddleware, async (req, res) => {
   const { username, password, newPassword } = req.body;
+  const { success } = userSchema.safeParse(req.body);
+  if (!success)
+    res.json({
+      msg: "Invalid input",
+    });
 
   const updatedUser = await User.findOne({
     username,
@@ -87,6 +91,14 @@ router.put("/update_password", authMiddleware, async (req, res) => {
       updatedUser,
     });
   }
+});
+
+router.get("/view", authMiddleware, async (req, res) => {
+  const allUsers = await User.find({});
+  const users = allUsers.filter((index) => {
+    return index.username != username;
+  });
+  res.json({ users });
 });
 
 module.exports = router;
