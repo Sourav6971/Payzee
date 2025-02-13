@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET = process.env.SECRET;
 const zod = require("zod");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 const userSchema = zod.object({
   firstName: zod.string(),
@@ -14,10 +15,7 @@ const userSchema = zod.object({
 });
 
 router.post("/signup", async (req, res) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const username = req.body.username;
-  const password = req.body.password;
+  const { firstName, lastName, username, password } = req.body;
   const validateSchema = userSchema.safeParse({
     firstName,
     lastName,
@@ -55,8 +53,7 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const { username, password } = req.body;
 
   const validateUser = await User.findOne({
     username,
@@ -72,10 +69,8 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.put("/update_password:", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const newPassword = req.body.newPassword;
+router.put("/update_password", authMiddleware, async (req, res) => {
+  const { username, password, newPassword } = req.body;
 
   const updatedUser = await User.findOne({
     username,
@@ -83,7 +78,7 @@ router.put("/update_password:", async (req, res) => {
   });
   if (!updatedUser) {
     res.json({
-      msg: "user not found",
+      msg: "Wrong Credentials",
     });
   } else {
     updatedUser.password = newPassword;
