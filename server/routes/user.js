@@ -59,42 +59,61 @@ router.post("/signin", async (req, res) => {
 });
 
 router.put("/update_user", authMiddleware, async (req, res) => {
-  const { username, password, newPassword } = req.body;
-  const { success } = userSchema.safeParse(req.body);
+  const { firstName, lastName, password } = req.body;
+  const username = req.username;
+  const { success } = userSchema.safeParse({
+    firstName,
+    lastName,
+    username,
+    password,
+  });
   if (!success)
     res.json({
       msg: "Invalid input",
     });
 
-  const updatedUser = await User.findOne({
-    username,
-    password,
-  });
-  if (!updatedUser) {
-    res.json({
-      msg: "Wrong Credentials",
-    });
-  } else {
-    updatedUser.password = newPassword;
-    await updatedUser.save();
+  const updatedUser = await User.findOneAndUpdate(
+    { username },
+
+    {
+      firstName,
+      lastName,
+      password,
+    },
+    {
+      new: true,
+    }
+  );
+  if (updatedUser) {
     res.json({
       updatedUser,
+    });
+  } else {
+    res.json({
+      msg: "user not found",
     });
   }
 });
 
 router.get("/view", authMiddleware, async (req, res) => {
   const filter = req.query.filter;
-  const user = await User.find({
-    $or: [{ firstName: { $regex: filter } }, { lastName: { $regex: filter } }],
-  });
-
-  if (user.length) {
-    res.json({ user });
-  } else {
-    res.json({
-      msg: "user not found",
+  try {
+    const user = await User.find({
+      $or: [
+        { firstName: { $regex: filter } },
+        { lastName: { $regex: filter } },
+      ],
     });
+
+    if (user.length) {
+      res.json({ user });
+    } else {
+      res.json({
+        msg: "user not found",
+      });
+    }
+  } catch (err) {
+    res.json({ msg: "user not found" });
   }
 });
 
