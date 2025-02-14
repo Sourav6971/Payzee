@@ -6,6 +6,7 @@ require("dotenv").config();
 const SECRET = process.env.SECRET;
 const zod = require("zod");
 const { authMiddleware } = require("../middlewares/authMiddleware");
+const bcrypt = require("bcryptjs");
 
 const userSchema = zod.object({
   firstName: zod.string(),
@@ -31,15 +32,17 @@ router.post("/signup", async (req, res) => {
         msg: "User already exists",
       });
     } else {
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(password, salt);
       const newUser = await User.create({
         firstName,
         lastName,
         username,
-        password,
+        password: hashedPassword,
       });
       const token = jwt.sign(username, SECRET);
       await Account.create({
-        userId,
+        userId: newUser._id,
         balance: 1000,
       });
       res.json({
@@ -54,9 +57,10 @@ router.post("/signin", async (req, res) => {
 
   const validateUser = await User.findOne({
     username,
-    password,
   });
-  if (validateUser) {
+  const validatePassword = bcrypt.compareSync(password, validateUser.password);
+
+  if (validatePassword) {
     req.userId = validateUser._id.toString();
 
     const token = jwt.sign(username, SECRET);
