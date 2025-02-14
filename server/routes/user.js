@@ -16,12 +16,7 @@ const userSchema = zod.object({
 
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-  const { success } = userSchema.safeParse({
-    firstName,
-    lastName,
-    username,
-    password,
-  });
+  const { success } = userSchema.safeParse(req.body);
 
   if (!success) {
     res.json({
@@ -36,12 +31,7 @@ router.post("/signup", async (req, res) => {
         msg: "User already exists",
       });
     } else {
-      const newUser = await User.create({
-        firstName,
-        lastName,
-        username,
-        password,
-      });
+      const newUser = await User.create(req.body);
       const token = jwt.sign(username, SECRET);
       res.json({
         newUser,
@@ -94,11 +84,18 @@ router.put("/update_user", authMiddleware, async (req, res) => {
 });
 
 router.get("/view", authMiddleware, async (req, res) => {
-  const allUsers = await User.find({});
-  const users = allUsers.filter((index) => {
-    return index.username != username;
+  const filter = req.query.filter;
+  const user = await User.find({
+    $or: [{ firstName: { $regex: filter } }, { lastName: { $regex: filter } }],
   });
-  res.json({ users });
+
+  if (user.length) {
+    res.json({ user });
+  } else {
+    res.json({
+      msg: "user not found",
+    });
+  }
 });
 
 module.exports = router;
