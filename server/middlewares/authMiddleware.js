@@ -12,7 +12,10 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const response = jwt.verify(jwtToken, secret);
-    if (response) next();
+    if (response) {
+      req.username = response;
+      next();
+    }
   } catch (err) {
     res.json(err);
   }
