@@ -1,1 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap");
 @import "tailwindcss";
+
+/* Overall page layout */
+.landing-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    to bottom right,
+    #0f0f0f,
+    #1f2937
+  ); /* Black to Gray Gradient */
+  padding: 1.5rem;
+}
+
+/* Box containing both SignIn/SignUp and info */
+.landing-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+  max-width: 85rem;
+  min-height: 75vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.85),
+    rgba(31, 41, 55, 0.85)
+  ); /* Darker gradient */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Make the sections side by side on larger screens */
+@media (min-width: 768px) {
+  .landing-box {
+    flex-direction: row;
+  }
+}
+
+/* Authentication Section (SignIn / SignUp) */
+.auth-section {
+  flex: 1;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Toggle Text (Switch Between SignIn & SignUp) */
+.toggle-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.toggle-text:hover {
+  color: #e5e7eb;
+}
+
+/* Info Section (Side Text) */
+.info-section {
+  flex: 1;
+  padding: 2rem;
+  color: #d1d5db;
+  font-size: 1.125rem;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .info-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* ========================= */
+/*      FORM STYLES         */
+/* ========================= */
+
+.form-container {
+  width: 100%;
+  max-width: 25rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.form-title {
+  font-size: 1.8rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+/* Form Layout */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%; /* Ensures full width */
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  outline: none;
+}
+
+/* ✅ Fixed Password Field Width */
+.password-container {
+  position: relative;
+  width: 100%; /* Now matches other input fields */
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  width: 100%; /* Ensures it fills the container */
+}
+
+/* Password Toggle Icon */
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 1.5rem; /* Bigger, cleaner icon */
+  display: flex;
+  align-items: center;
+}
+
+/* Submit Button */
+.submit-btn {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: linear-gradient(to right, #6366f1, #9333ea);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: "Poppins", sans-serif; /* Improved button font */
+}
+
+.submit-btn:hover {
+  background: linear-gradient(to right, #4f46e5, #7e22ce);
+}
