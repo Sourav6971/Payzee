@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useNavigate, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axios from "axios";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,13 +33,17 @@ const SignUp = () => {
       );
       if (response.status == 200) {
         console.log(response.data.token);
-      } else {
-        console.log(response.data);
+        alert("Signup successfull");
+        navigate("/home");
+      } else if (response.status === 409) {
+        alert("user already exists");
       }
-      alert("Signup successfull");
-    } catch (e) {
-      console.log("error in signup");
-      alert("Signup failed:Try after some time");
+    } catch (err) {
+      if (err.response.status == 409) {
+        alert("User already exists");
+      } else {
+        alert("Sign up Failed!");
+      }
     }
   };
 

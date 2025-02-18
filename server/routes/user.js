@@ -16,7 +16,8 @@ const userSchema = zod.object({
 });
 
 router.post("/signup", async (req, res) => {
-  const { firstName, lastName, username, password } = req.body;
+  let { firstName, lastName, username, password } = req.body;
+  username = username?.toLowerCase();
   const { success } = userSchema.safeParse(req.body);
 
   if (!success) {
@@ -28,7 +29,7 @@ router.post("/signup", async (req, res) => {
       username,
     });
     if (response) {
-      res.json({
+      res.status(409).json({
         msg: "User already exists",
       });
     } else {
@@ -53,7 +54,8 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  const { username, password } = req.body;
+  let { username, password } = req.body;
+  username = username?.toLowerCase();
 
   const validateUser = await User.findOne({
     username,

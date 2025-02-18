@@ -3,7 +3,7 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 const Landing = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignIn, setIsSignIn] = useState(true);
   return (
     <div className="landing-page">
       <div className="landing-box">
@@ -15,11 +15,11 @@ const Landing = () => {
           </p>
         </div>
         <div className="auth-section">
-          {isSignUp ? <SignUp /> : <SignIn />}
-          <p className="toggle-text" onClick={() => setIsSignUp(!isSignUp)}>
-            {isSignUp
-              ? "Already have an account? Sign In"
-              : "Don't have an account? Sign Up"}
+          {isSignIn ? <SignIn /> : <SignUp />}
+          <p className="toggle-text" onClick={() => setIsSignIn(!isSignIn)}>
+            {isSignIn
+              ? "Don't have an account? Sign Up"
+              : "Already have an account? Sign In"}
           </p>
         </div>
       </div>
