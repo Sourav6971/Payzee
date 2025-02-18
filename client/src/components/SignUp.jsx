@@ -1,4 +1,5 @@
-import React, { useNavigate, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axios from "axios";
 
@@ -76,7 +77,7 @@ const SignUp = () => {
         <div className="password-container">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Password"
+            placeholder="Password (minimum 6 letters)"
             className="input-field"
             name="password"
             onChange={handleChange}

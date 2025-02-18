@@ -7,11 +7,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(
-    to bottom right,
-    #0f0f0f,
-    #1f2937
-  ); /* Black to Gray Gradient */
+  background: linear-gradient(to bottom right, #0f0f0f, #1f2937);
   padding: 1.5rem;
 }
 
@@ -28,20 +24,23 @@
     to bottom,
     rgba(0, 0, 0, 0.85),
     rgba(31, 41, 55, 0.85)
-  ); /* Darker gradient */
+  );
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
-/* Make the sections side by side on larger screens */
+/* Make sections side by side on larger screens */
 @media (min-width: 768px) {
   .landing-box {
     flex-direction: row;
   }
 }
 
-/* Authentication Section (SignIn / SignUp) */
+/* ========================= */
+/*     AUTH SECTION FIX      */
+/* ========================= */
 .auth-section {
   flex: 1;
   padding: 2rem;
@@ -51,20 +50,27 @@
   align-items: center;
 }
 
-/* Toggle Text (Switch Between SignIn & SignUp) */
-.toggle-text {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  color: #9ca3af;
-  transition: color 0.3s ease;
+.auth-wrapper {
+  width: 100%;
+  max-width: 25rem;
+  min-height: 420px; /* Minimum height to match SignIn */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Prevents flickering */
+  transition: height 0.3s ease-in-out; /* Smooth height adjustment */
 }
 
-.toggle-text:hover {
-  color: #e5e7eb;
+.auth-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Info Section (Side Text) */
+/* ========================= */
+/*      INFO SECTION        */
+/* ========================= */
 .info-section {
   flex: 1;
   padding: 2rem;
@@ -83,9 +89,23 @@
 }
 
 /* ========================= */
+/*      TOGGLE TEXT         */
+/* ========================= */
+.toggle-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.toggle-text:hover {
+  color: #e5e7eb;
+}
+
+/* ========================= */
 /*      FORM STYLES         */
 /* ========================= */
-
 .form-container {
   width: 100%;
   max-width: 25rem;
@@ -102,6 +122,7 @@
   color: white;
   margin-bottom: 1.5rem;
 }
+
 /* Form Layout */
 .form {
   display: flex;
@@ -111,7 +132,7 @@
 
 /* Input Fields */
 .input-field {
-  width: 100%; /* Ensures full width */
+  width: 100%;
   padding: 0.75rem;
   border: none;
   border-radius: 0.5rem;
@@ -124,13 +145,13 @@
 /* ✅ Fixed Password Field Width */
 .password-container {
   position: relative;
-  width: 100%; /* Now matches other input fields */
+  width: 100%;
   display: flex;
   align-items: center;
 }
 
 .password-container input {
-  width: 100%; /* Ensures it fills the container */
+  width: 100%;
 }
 
 /* Password Toggle Icon */
@@ -141,7 +162,7 @@
   border: none;
   cursor: pointer;
   color: white;
-  font-size: 1.5rem; /* Bigger, cleaner icon */
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
 }
@@ -156,7 +177,7 @@
   color: white;
   cursor: pointer;
   transition: 0.3s;
-  font-family: "Poppins", sans-serif; /* Improved button font */
+  font-family: "Poppins", sans-serif;
 }
 
 .submit-btn:hover {
