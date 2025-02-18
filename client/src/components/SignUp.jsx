@@ -34,7 +34,7 @@ const SignUp = () => {
       if (response.status == 200) {
         console.log(response.data.token);
         alert("Signup successfull");
-        navigate("/hello");
+        navigate("/home");
       } else if (response.status === 409) {
         alert("user already exists");
       }

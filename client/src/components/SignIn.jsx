@@ -28,7 +28,7 @@ const SignIn = () => {
       if (response.status === 200) {
         console.log(response.data.token);
         alert("Sign in succesfull");
-        navigate("/signinho");
+        navigate("/home");
       } else {
         console.log(response);
       }
