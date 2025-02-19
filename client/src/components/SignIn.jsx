@@ -40,33 +40,35 @@ const SignIn = () => {
   return (
     <div className="sign-in-container">
       <h2 className="form-title">Sign In</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        className="input-field"
-        name="username"
-        onChange={handleChange}
-      />
-
-      <div className="password-container">
+      <form className="form" onSubmit={handleSubmit}>
         <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder="Password"
+          type="text"
+          placeholder="Username"
           className="input-field"
+          name="username"
           onChange={handleChange}
         />
-        <span
-          className="password-toggle-icon"
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-        </span>
-      </div>
 
-      <button type="submit" className="submit-btn">
-        Sign In
-      </button>
+        <div className="password-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="input-field"
+            onChange={handleChange}
+          />
+          <span
+            className="password-toggle-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </span>
+        </div>
+
+        <button type="submit" className="submit-btn">
+          Sign In
+        </button>
+      </form>
     </div>
   );
 };
