@@ -1,16 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 import logo from "../assets/logo.png";
 const Navbar = () => {
+  const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
   const NavbarItem = ({ title, classProps }) => {
-    return <li className={`m-4 cursor-pointer {classProps}`}>{title}</li>;
+    return (
+      <li
+        className={`m-4 cursor-pointer ${classProps}`}
+        onClick={() => {
+          navigate(`/${title}`);
+        }}
+      >
+        {title}
+      </li>
+    );
   };
+
   return (
     <nav className="w-full flex md:justify-center justify-between text-center p-4">
-      <div className="md:flex-[0.5] flex-initial justify-center items-center">
-        <img src={logo} alt="logo" className="w-12 cursor-pointer"></img>
+      <div className="md:flex-[0.5] flex-col flex-initial justify-center items-center">
+        <div className="flex items-center">
+          <span className="ml-3 mt-2 text-white text-3xl font-stretch-semi-expanded ">
+            {" "}
+            Payzee!
+          </span>
+        </div>
       </div>
       <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">
         {
@@ -18,11 +35,14 @@ const Navbar = () => {
           return <NavbarItem key={item + index} title={item} />;
         })} */
           //The above line can also be written without the return statement as:
-          ["Market", "Exchange", "Tutorials", "Wallets"].map((item, index) => (
+          ["Home", "Market", "Tutorials", "Wallets"].map((item, index) => (
             <NavbarItem key={item + index} title={item} />
           ))
         }
-        <li className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]">
+        <li
+          className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={() => navigate("/auth")}
+        >
           Login
         </li>
       </ul>
@@ -63,15 +83,13 @@ const Navbar = () => {
               />
             </li>
             <li>
-              {["Market", "Exchange", "Tutorials", "Wallets"].map(
-                (item, index) => (
-                  <NavbarItem
-                    key={item + index}
-                    title={item}
-                    classProps="m-2 text-lg"
-                  />
-                )
-              )}
+              {["Home", "Market", "Tutorials", "Wallets"].map((item, index) => (
+                <NavbarItem
+                  key={item + index}
+                  title={item}
+                  classProps="m-2 text-lg"
+                />
+              ))}
             </li>
           </ul>
         )}

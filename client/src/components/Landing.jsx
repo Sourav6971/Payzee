@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+import Navbar from "./Navbar";
+import "../landing.css";
 
 const Landing = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -13,38 +15,38 @@ const Landing = () => {
   };
 
   return (
-    <div className="landing-page">
-      <div className="landing-box">
-        {/* Info Section */}
-        <div className="info-section">
-          <p>
-            Welcome to <b>Payzee!</b> Experience a seamless and secure way to
-            manage your payments in crypto with ease.
-          </p>
-        </div>
-
-        {/* Auth Section */}
-        <div className="auth-section">
-          {/* Wrapper to ensure consistent size */}
-          <div className="auth-wrapper">
-            <motion.div
-              key={isSignIn ? "signIn" : "signUp"}
-              initial="hiddenLeft" // Always start from the left
-              animate="visible" // Animate to the center
-              exit="exitRight" // Always exit to the right
-              variants={variants}
-              className="auth-container"
-            >
-              {isSignIn ? <SignIn /> : <SignUp />}
-            </motion.div>
+    <div>
+      <Navbar />
+      <div className="landing-page">
+        <div className="landing-box">
+          {/* Info Section */}
+          <div className="info-section">
+            <div className="info-content">
+              <h2>About Payzee</h2>
+              <p>Payzee is a revolutionary payment platform...</p>
+            </div>
           </div>
 
-          {/* Toggle Button */}
-          <p className="toggle-text" onClick={() => setIsSignIn(!isSignIn)}>
-            {isSignIn
-              ? "Don't have an account? Sign Up"
-              : "Already have an account? Sign In"}
-          </p>
+          {/* Auth Section */}
+          <div className="auth-section">
+            <div className="form-container">
+              <motion.div
+                key={isSignIn ? "signIn" : "signUp"}
+                initial="hiddenLeft" // Always start from the left
+                animate="visible" // Animate to the center
+                exit="exitRight" // Always exit to the right
+                variants={variants}
+                className="auth-container"
+              >
+                {isSignIn ? <SignIn /> : <SignUp />}
+              </motion.div>
+              <p className="toggle-text" onClick={() => setIsSignIn(!isSignIn)}>
+                {isSignIn
+                  ? "Don't have an account? Sign Up"
+                  : "Already have an account? Sign In"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

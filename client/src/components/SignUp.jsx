@@ -18,8 +18,8 @@ const SignUp = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password != formData.confirmPassword) {
-      alert("passwords do not match");
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
       return;
     }
     try {
@@ -32,24 +32,24 @@ const SignUp = () => {
           password: formData.password,
         }
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         console.log(response.data.token);
-        alert("Signup successfull");
+        alert("Signup successful");
         navigate("/home");
       } else if (response.status === 409) {
-        alert("user already exists");
+        alert("User already exists");
       }
     } catch (err) {
-      if (err.response.status == 409) {
+      if (err.response.status === 409) {
         alert("User already exists");
       } else {
-        alert("Sign up Failed!");
+        alert("Sign up failed!");
       }
     }
   };
 
   return (
-    <div className="form-container">
+    <div className="sign-up-container">
       <h2 className="form-title">Sign Up</h2>
       <form className="form" onSubmit={handleSubmit}>
         <input
@@ -82,16 +82,15 @@ const SignUp = () => {
             name="password"
             onChange={handleChange}
           />
-          <button
-            type="button"
-            className="toggle-password"
+          <span
+            className="password-toggle-icon"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-          </button>
+          </span>
         </div>
         <input
-          type="text"
+          type="password"
           placeholder="Confirm Password"
           name="confirmPassword"
           className="input-field"

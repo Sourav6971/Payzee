@@ -29,13 +29,13 @@ const Home = () => {
         <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-5xl gap-10">
           {/* Left Section */}
           <div className="flex flex-col items-start w-full md:w-1/2 space-y-6">
-            <h1 className="text-xl md:text-5xl text-white text-gradient leading-tight">
+            <h1 className="text-3xl md:text-3xl text-white text-gradient leading-tight">
               <b className="text-6xl">One Stop Solution</b> <br /> to all your
               crypto needs....
             </h1>
             <p className="text-white text-lg font-light">
               Explore the crypto world. Buy and sell cryptocurrencies easily on{" "}
-              <b className="text-2xl">Payzee!</b>
+              <b className="text-xl">Payzee!</b>
             </p>
             <button
               type="button"

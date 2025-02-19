@@ -27,7 +27,7 @@ const SignIn = () => {
 
       if (response.status === 200) {
         console.log(response.data.token);
-        alert("Sign in succesfull");
+        alert("Sign in successful");
         navigate("/home");
       } else {
         console.log(response);
@@ -38,38 +38,35 @@ const SignIn = () => {
     }
   };
   return (
-    <div className="form-container">
+    <div className="sign-in-container">
       <h2 className="form-title">Sign In</h2>
-      <form className="form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Username"
+        className="input-field"
+        name="username"
+        onChange={handleChange}
+      />
+
+      <div className="password-container">
         <input
-          type="text"
-          placeholder="Username"
+          type={showPassword ? "text" : "password"}
+          name="password"
+          placeholder="Password"
           className="input-field"
-          name="username"
           onChange={handleChange}
         />
+        <span
+          className="password-toggle-icon"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+        </span>
+      </div>
 
-        <div className="password-container">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            className="input-field"
-            onChange={handleChange}
-          />
-          <button
-            type="button"
-            className="toggle-password"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-          </button>
-        </div>
-
-        <button type="submit" className="submit-btn">
-          Sign In
-        </button>
-      </form>
+      <button type="submit" className="submit-btn">
+        Sign In
+      </button>
     </div>
   );
 };
