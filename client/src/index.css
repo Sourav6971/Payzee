@@ -1,17 +1,35 @@
+/* Import fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap");
 @import "tailwindcss";
 
-/* Overall page layout */
+/* Global Theme */
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #9333ea;
+  --background-dark: #0f0f0f;
+  --background-light: rgba(255, 255, 255, 0.1);
+  --text-light: #e5e7eb;
+  --text-dark: #d1d5db;
+  --border-radius: 1rem;
+  --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--background-dark);
+  color: var(--text-light);
+}
+
+/* Layout */
 .landing-page {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #0f0f0f, #1f2937);
+  background: linear-gradient(to bottom right, var(--background-dark), #1f2937);
   padding: 1.5rem;
 }
 
-/* Box containing both SignIn/SignUp and info */
 .landing-box {
   display: flex;
   flex-direction: column;
@@ -26,57 +44,28 @@
     rgba(31, 41, 55, 0.85)
   );
   padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
   overflow: hidden;
 }
 
-/* Make sections side by side on larger screens */
 @media (min-width: 768px) {
   .landing-box {
     flex-direction: row;
   }
 }
 
-/* ========================= */
-/*     AUTH SECTION FIX      */
-/* ========================= */
-.auth-section {
-  flex: 1;
-  padding: 2rem;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.auth-wrapper {
-  width: 100%;
-  max-width: 25rem;
-  min-height: 420px; /* Minimum height to match SignIn */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden; /* Prevents flickering */
-  transition: height 0.3s ease-in-out; /* Smooth height adjustment */
-}
-
-.auth-container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ========================= */
-/*      INFO SECTION        */
-/* ========================= */
+/* Sections */
+.auth-section,
 .info-section {
   flex: 1;
   padding: 2rem;
-  color: #d1d5db;
-  font-size: 1.125rem;
+  text-align: center;
+}
+
+.info-section {
   display: none;
+  color: var(--text-dark);
 }
 
 @media (min-width: 768px) {
@@ -84,53 +73,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
   }
 }
 
-/* ========================= */
-/*      TOGGLE TEXT         */
-/* ========================= */
-.toggle-text {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  color: #9ca3af;
-  transition: color 0.3s ease;
-}
-
-.toggle-text:hover {
-  color: #e5e7eb;
-}
-
-/* ========================= */
-/*      FORM STYLES         */
-/* ========================= */
+/* Forms */
 .form-container {
   width: 100%;
   max-width: 25rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--background-light);
   padding: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
 }
+
 .form-title {
   font-size: 1.8rem;
-  font-family: "Poppins", sans-serif;
   font-weight: 700;
   color: white;
   margin-bottom: 1.5rem;
 }
 
-/* Form Layout */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Input Fields */
 .input-field {
   width: 100%;
   padding: 0.75rem;
@@ -142,44 +104,39 @@
   outline: none;
 }
 
-/* ✅ Fixed Password Field Width */
-.password-container {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.password-container input {
-  width: 100%;
-}
-
-/* Password Toggle Icon */
-.toggle-password {
-  position: absolute;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-}
-
-/* Submit Button */
+/* Buttons */
 .submit-btn {
   padding: 0.75rem;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
-  background: linear-gradient(to right, #6366f1, #9333ea);
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: white;
   cursor: pointer;
   transition: 0.3s;
-  font-family: "Poppins", sans-serif;
 }
 
 .submit-btn:hover {
   background: linear-gradient(to right, #4f46e5, #7e22ce);
+}
+
+/* Glassmorphism Effects */
+.blue-glassmorphism,
+.white-glassmorphism {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.blue-glassmorphism {
+  background: rgba(39, 51, 89, 0.4);
+}
+
+.white-glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
 }
