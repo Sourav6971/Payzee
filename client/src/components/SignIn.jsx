@@ -29,11 +29,12 @@ const SignIn = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.data.token) {
         const tokenResponse = response.data.token;
         dispatch(signin(tokenResponse));
         alert("Sign in successful");
-        // navigate("/home");
+      } else {
+        alert("Sign in failed");
       }
     } catch (err) {
       alert("Sign in failed");
