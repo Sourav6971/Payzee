@@ -33,6 +33,7 @@ const SignIn = () => {
         const tokenResponse = response.data.token;
         dispatch(signin(tokenResponse));
         alert("Sign in successful");
+        navigate("/Home");
       } else {
         alert("Sign in failed");
       }
