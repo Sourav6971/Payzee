@@ -1,9 +1,13 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { signin } from "../features/auth";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token.value);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [inputForm, setInputForm] = useState({
@@ -26,14 +30,12 @@ const SignIn = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data.token);
+        const tokenResponse = response.data.token;
+        dispatch(signin(tokenResponse));
         alert("Sign in successful");
-        navigate("/home");
-      } else {
-        console.log(response);
+        // navigate("/home");
       }
     } catch (err) {
-      console.log(err);
       alert("Sign in failed");
     }
   };
@@ -48,7 +50,6 @@ const SignIn = () => {
           name="username"
           onChange={handleChange}
         />
-
         <div className="password-container">
           <input
             type={showPassword ? "text" : "password"}
