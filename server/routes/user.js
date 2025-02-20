@@ -60,13 +60,18 @@ router.post("/signin", async (req, res) => {
   const validateUser = await User.findOne({
     username,
   });
-  const validatePassword = bcrypt.compareSync(password, validateUser.password);
+  if (validateUser) {
+    const validatePassword = bcrypt.compareSync(
+      password,
+      validateUser.password
+    );
 
-  if (validatePassword) {
-    req.userId = validateUser._id.toString();
+    if (validatePassword) {
+      req.userId = validateUser._id.toString();
 
-    const token = jwt.sign(username, SECRET);
-    res.json({ token });
+      const token = jwt.sign(username, SECRET);
+      res.json({ token });
+    }
   } else {
     res.json({
       msg: "Invalid Credentials",
