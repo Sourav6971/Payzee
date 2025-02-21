@@ -25,8 +25,8 @@ const SignIn = () => {
         }
       );
 
-      if (response.status === 200) {
-        console.log(response.data.token);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
         alert("Sign in successful");
         navigate("/home");
       } else {
