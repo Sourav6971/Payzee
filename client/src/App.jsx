@@ -2,7 +2,6 @@ import React from "react";
 import Home from "./components/Home";
 import Landing from "./components/Landing";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -14,7 +13,6 @@ const App = () => {
           <Route path="/auth" element={<Landing />} />
         </Routes>
       </BrowserRouter>
-      <Footer />
     </div>
   );
 };

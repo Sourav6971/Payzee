@@ -22,12 +22,8 @@ const Landing = () => {
           {/* Info Section */}
           <div className="info-section">
             <div className="info-content">
-              <h2>About Payzee!</h2>
-              <p>
-                Payzee is a revolutionary payment platform which allows you to
-                manage all your crypto transactions like minting, exchange and
-                transfer at a single place.
-              </p>
+              <h2>About Payzee</h2>
+              <p>Payzee is a revolutionary payment platform...</p>
             </div>
           </div>
 
