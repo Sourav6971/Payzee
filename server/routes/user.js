@@ -15,6 +15,27 @@ const userSchema = zod.object({
   password: zod.string().min(6),
 });
 
+router.post("/me", (req, res) => {
+  const recievedToken = req.body.token;
+  const jwtToken = recievedToken.split(" ")[1];
+  try {
+    const response = jwt.verify(jwtToken, SECRET);
+    if (response) {
+      res.status(200).json({
+        verification: true,
+      });
+    } else {
+      res.json({
+        verification: false,
+      });
+    }
+  } catch (err) {
+    res.json({
+      msg: "sign in again",
+    });
+  }
+});
+
 router.post("/signup", async (req, res) => {
   let { firstName, lastName, username, password } = req.body;
   username = username?.toLowerCase();

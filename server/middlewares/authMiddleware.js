@@ -12,8 +12,8 @@ const authMiddleware = async (req, res, next) => {
   const jwtToken = authHeader.split(" ")[1];
   try {
     const response = jwt.verify(jwtToken, secret);
-    const foundUser = await User.findOne({ username: response });
     if (response) {
+      const foundUser = await User.findOne({ username: response });
       req.username = response;
       req.userId = foundUser._id;
       next();

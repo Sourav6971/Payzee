@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Navbar from "./Navbar";
-import "../landing.css";
+import "../styles/landing.css";
 
 const Landing = () => {
   const [isSignIn, setIsSignIn] = useState(true);
