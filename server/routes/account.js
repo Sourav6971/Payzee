@@ -4,6 +4,7 @@ const { Account, User } = require("../db/index");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { createAccount } = require("../solana/createAccount");
 const bcrypt = require("bcryptjs");
+const { balance } = require("../solana/balance");
 
 router.get("/balance", authMiddleware, async (req, res) => {
   const userId = req.userId;
@@ -42,12 +43,14 @@ router.post("/create-account", async (req, res) => {
         });
       }
 
-      const returnValue = createAccount();
+      const returnValue = await createAccount();
+      const balanceAvailable = await balance(returnValue.publicKeyString);
+
       await Account.create({
         userId: validateUser._id,
-        publicKey: (await returnValue).publicKeyString,
-        privateKey: (await returnValue).secretKeyString,
-        balance: 0,
+        publicKey: returnValue.publicKeyString,
+        privateKey: returnValue.secretKeyString,
+        balance: balanceAvailable,
       });
       return res.json({
         msg: "account created successfully",
@@ -60,6 +63,22 @@ router.post("/create-account", async (req, res) => {
   } else {
     return res.status(403).json({
       msg: "user not found",
+    });
+  }
+});
+
+router.get("/balance", authMiddleware, async (req, res) => {
+  const userId = req.userId;
+  const response = await Account.findOne({
+    userId,
+  });
+  if (response.balance) {
+    return res.json({
+      balance: "balance",
+    });
+  } else {
+    return res.status(404).json({
+      msg: "user does not exist",
     });
   }
 });

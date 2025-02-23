@@ -1,15 +1,13 @@
-const { Keypair, Connection, clusterApiUrl } = require("@solana/web3.js");
+const { Connection, clusterApiUrl, PublicKey } = require("@solana/web3.js");
+
 const bs58 = require("bs58");
 
-async function balance(privateKey) {
-  const connection = new Connection(clusterApiUrl("devnet"));
-  const senderKeyPair = Keypair.fromSecretKey(bs58.default.decode(privateKey));
-  const balance = await connection.getBalance(senderKeyPair.publicKey);
-  console.log(balance);
-}
+async function balance(userPublicKey) {
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-balance(
-  "3rHH4q2fPQ1yLHPBmgV8g6CEheUSxu66oWr279e2awgd6FMifW2KP5qazvxpEinufpKogV94N26gWP54ZhDHgLaY"
-);
+  const balance = await connection.getBalance(new PublicKey(userPublicKey));
+
+  return balance;
+}
 
 module.exports = { balance };

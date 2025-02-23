@@ -25,7 +25,7 @@ const AccountSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },
   publicKey: { type: String, required: true },
   privateKey: { type: String, required: true },
-  balance: { type: Number, required: true },
+  balance: { type: String, required: true },
 });
 
 const Account = mongoose.model("Account", AccountSchema);
