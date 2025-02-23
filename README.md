@@ -14,7 +14,7 @@ Payzee is a decentralized payments application built on the **Solana blockchain*
 
 Below is the overall architecture and flow of the Payzee app:
 
-![Application Flow](/workflow.png)
+![Application Flow](/flowchart.png)
 
 ## Tech Stack
 
