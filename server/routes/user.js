@@ -18,6 +18,7 @@ const userSchema = zod.object({
 router.post("/me", (req, res) => {
   const recievedToken = req.body.token;
   const jwtToken = recievedToken.split(" ")[1];
+
   try {
     const response = jwt.verify(jwtToken, SECRET);
     if (response) {
@@ -146,7 +147,6 @@ router.get("/view", authMiddleware, async (req, res) => {
         { lastName: { $regex: filter } },
       ],
     });
-    console.log(user);
     if (user.length) {
       res.json({
         users: user.map((index) => ({

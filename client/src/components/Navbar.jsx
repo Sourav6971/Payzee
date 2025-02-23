@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
-import logo from "../assets/logo.png";
+
 const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState("Login");
+  const navItems = ["Home", "Market", "Dashboard", "Tutorials"];
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) setIsLoggedIn("Logout");
+  }, [isLoggedIn]);
+
   const NavbarItem = ({ title, classProps }) => {
     return (
       <li
@@ -35,15 +42,22 @@ const Navbar = () => {
           return <NavbarItem key={item + index} title={item} />;
         })} */
           //The above line can also be written without the return statement as:
-          ["Home", "Market", "Tutorials", "Wallets"].map((item, index) => (
+          navItems.map((item, index) => (
             <NavbarItem key={item + index} title={item} />
           ))
         }
         <li
           className="bg-[#2952e3] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#2546bd]"
-          onClick={() => navigate("/auth")}
+          onClick={() => {
+            if (isLoggedIn === "Logout") {
+              localStorage.removeItem("token");
+              setIsLoggedIn("Login");
+            } else {
+              navigate("/Auth");
+            }
+          }}
         >
-          Login
+          {isLoggedIn}
         </li>
       </ul>
       <div className="flex relative">
@@ -83,7 +97,7 @@ const Navbar = () => {
               />
             </li>
             <li>
-              {["Home", "Market", "Tutorials", "Wallets"].map((item, index) => (
+              {navItems.map((item, index) => (
                 <NavbarItem
                   key={item + index}
                   title={item}

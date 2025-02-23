@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import Navbar from "./Navbar";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
+import Navbar from "../components/Navbar";
 import "../styles/landing.css";
 
 const Landing = () => {
