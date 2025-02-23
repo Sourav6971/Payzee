@@ -1,6 +1,6 @@
 const Router = require("express");
 const router = Router();
-const { User, Account } = require("../db/index");
+const { User } = require("../db/index");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET = process.env.SECRET;
@@ -64,10 +64,6 @@ router.post("/signup", async (req, res) => {
         password: hashedPassword,
       });
       const token = jwt.sign(username, SECRET);
-      await Account.create({
-        userId: newUser._id,
-        balance: 1000,
-      });
       res.json({
         token: token,
       });
