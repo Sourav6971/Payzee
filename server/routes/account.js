@@ -5,10 +5,12 @@ const { createAccount } = require("../solana/createAccount");
 const bcrypt = require("bcryptjs");
 const { balanceCheck } = require("../solana/balance");
 const { addAccount } = require("../solana/addAccount");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
-router.post("/create-account", async (req, res) => {
-  let { username, password } = req.body;
-  username = username?.toLowerCase();
+router.post("/create-account", authMiddleware, async (req, res) => {
+  username = req.username;
+  let { password } = req.body;
+  username = username.toLowerCase();
 
   const validateUser = await User.findOne({
     username,
@@ -21,7 +23,6 @@ router.post("/create-account", async (req, res) => {
 
     if (validatePassword) {
       const { publicKeyString, secretKeyString } = await createAccount();
-      const balance = await balanceCheck(publicKeyString);
 
       const userUpdated = await User.updateOne(
         { username },
@@ -30,7 +31,6 @@ router.post("/create-account", async (req, res) => {
             accounts: {
               publicKey: publicKeyString,
               privateKey: secretKeyString,
-              balance,
             },
           },
         }
@@ -52,8 +52,9 @@ router.post("/create-account", async (req, res) => {
   }
 });
 
-router.post("/add-existing", async (req, res) => {
-  const { username, password, privateKey } = req.body;
+router.post("/add-existing", authMiddleware, async (req, res) => {
+  const username = req.username;
+  const { password, privateKey } = req.body;
 
   const availableUser = await User.findOne({ username });
   if (!availableUser) {
@@ -78,7 +79,6 @@ router.post("/add-existing", async (req, res) => {
     return res.json({ msg: "public key must be unique" });
   }
 
-  const availableBalance = await balanceCheck(publicAddress);
   const addedAccount = await User.updateOne(
     { username },
     {
@@ -86,7 +86,6 @@ router.post("/add-existing", async (req, res) => {
         accounts: {
           publicKey: publicAddress,
           privateKey,
-          balance: availableBalance,
         },
       },
     }
@@ -98,6 +97,20 @@ router.post("/add-existing", async (req, res) => {
   } else {
     return res.status(200).json({
       msg: "account added successfully",
+    });
+  }
+});
+
+router.get("/balance", authMiddleware, async (req, res) => {
+  const publicKey = req.body.publicKey;
+  try {
+    const availableBalance = await balanceCheck(publicKey);
+    return res.json({
+      balance: availableBalance,
+    });
+  } catch (err) {
+    return res.status(404).json({
+      msg: "could not fetch balance",
     });
   }
 });

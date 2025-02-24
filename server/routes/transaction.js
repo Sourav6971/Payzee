@@ -1,45 +1,50 @@
 const mongoose = require("mongoose");
 const Router = require("express");
-const { Account } = require("../db");
+const { User } = require("../db");
 const { authMiddleware } = require("../middlewares/authMiddleware");
+const { transaction } = require("../solana/transaction");
 const router = Router();
+const bcrypt = require("bcryptjs");
 
 router.post("/transaction", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  const { amount, to } = req.body;
+  const { fromAddress, toAddress, password, amount } = req.body;
 
-  const account = await Account.findOne({ userId: req.userId }).session(
-    session
-  );
-  console.log(account);
-  if (!account || account.balance < amount) {
+  const fromAccount = await User.findOne({
+    "accounts.privateKey": fromAddress,
+  }).session(session);
+
+  if (!fromAccount) {
     await session.abortTransaction();
-    return res.status(400).json({
-      msg: "Insufficient balance",
-    });
-  }
-  const toAccount = await Account.findOne({ userId: to }).session(session);
-  if (!toAccount) {
-    await session.abortTransaction();
-    return res.status(400).json({
-      msg: "Invalid account",
+    return res.status(401).json({
+      msg: "Account does not exist",
     });
   }
 
-  await Account.updateOne(
-    { userId: req.userId },
-    { $inc: { balance: -amount } }
-  ).session(session);
-  await Account.updateOne(
-    { userId: to },
-    { $inc: { balance: amount } }
-  ).session(session);
+  const correctPassword = bcrypt.compareSync(password, fromAccount.password);
 
-  await session.commitTransaction();
-  res.status(200).json({
-    msg: "transfer successfull",
-  });
+  if (!correctPassword) {
+    await session.abortTransaction();
+    return res.status(401).json({
+      msg: "Incorrect password",
+    });
+  }
+
+  try {
+    const signature = await transaction(fromAddress, toAddress, amount);
+
+    await session.commitTransaction();
+    return res.status(200).json({
+      msg: "transfer successfull",
+      signature,
+    });
+  } catch (err) {
+    await session.abortTransaction();
+    return res.status(404).json({
+      msg: "Insufficient funds",
+    });
+  }
 });
 
 module.exports = router;

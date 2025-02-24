@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   username: { type: String, required: true },
   password: { type: String, required: true },
-  accounts: [{ privateKey: String, publicKey: String, balance: String }],
+  accounts: [{ privateKey: String, publicKey: String }],
 });
 //for future property listings in market
 // const PropertySchema = new mongoose.Schema({

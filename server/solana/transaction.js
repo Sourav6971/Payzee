@@ -14,7 +14,6 @@ async function transaction(fromAddress, toAddress, amount) {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const recipientPublicKey = new PublicKey(toAddress);
   const senderKeyPair = Keypair.fromSecretKey(bs58.default.decode(fromAddress));
-  console.log("sending " + amount + " to " + recipientPublicKey.toBase58());
   amountInLamports = amount * LAMPORTS_PER_SOL;
   const transaction = new Transaction().add(
     SystemProgram.transfer({
@@ -26,11 +25,8 @@ async function transaction(fromAddress, toAddress, amount) {
   const signature = await sendAndConfirmTransaction(connection, transaction, [
     senderKeyPair,
   ]);
-  console.log("Transaction successfull");
-  console.log(signature);
 
-  const balance = await connection.getBalance(senderKeyPair.publicKey);
-  console.log(`balance = ${balance / LAMPORTS_PER_SOL}`);
+  return signature;
 }
 
 module.exports = { transaction };
