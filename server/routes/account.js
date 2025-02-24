@@ -1,10 +1,10 @@
 const Router = require("express");
 const router = Router();
-const { Account, User } = require("../db/index");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const { User } = require("../db/index");
 const { createAccount } = require("../solana/createAccount");
 const bcrypt = require("bcryptjs");
 const { balanceCheck } = require("../solana/balance");
+const { addAccount } = require("../solana/addAccount");
 
 router.post("/create-account", async (req, res) => {
   let { username, password } = req.body;
@@ -52,18 +52,52 @@ router.post("/create-account", async (req, res) => {
   }
 });
 
-router.get("/balance", authMiddleware, async (req, res) => {
-  const userId = req.userId;
-  const response = await Account.findOne({
-    userId,
-  });
-  if (response.balance) {
+router.post("/add-existing", async (req, res) => {
+  const { username, password, privateKey } = req.body;
+
+  const availableUser = await User.findOne({ username });
+  if (!availableUser) {
     return res.json({
-      balance: "balance",
+      msg: "user not found",
+    });
+  }
+  const correctPassword = availableUser.password;
+  const validatePassword = bcrypt.compareSync(password, correctPassword);
+  if (!validatePassword) {
+    return res.json({
+      msg: "wrong password",
+    });
+  }
+  const publicAddress = await addAccount(privateKey);
+
+  const existingAccount = await User.findOne({
+    username,
+    "accounts.publicKey": publicAddress,
+  });
+  if (existingAccount) {
+    return res.json({ msg: "public key must be unique" });
+  }
+
+  const availableBalance = await balanceCheck(publicAddress);
+  const addedAccount = await User.updateOne(
+    { username },
+    {
+      $push: {
+        accounts: {
+          publicKey: publicAddress,
+          privateKey,
+          balance: availableBalance,
+        },
+      },
+    }
+  );
+  if (!addedAccount) {
+    return res.status(401).json({
+      msg: "could not create account",
     });
   } else {
-    return res.status(404).json({
-      msg: "user does not exist",
+    return res.status(200).json({
+      msg: "account added successfully",
     });
   }
 });
