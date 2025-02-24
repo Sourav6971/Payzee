@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 require("dotenv").config();
 
 mongoose
@@ -10,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   username: { type: String, required: true },
   password: { type: String, required: true },
+  accounts: [{ privateKey: String, publicKey: String, balance: String }],
 });
 //for future property listings in market
 // const PropertySchema = new mongoose.Schema({
@@ -20,13 +22,4 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
-const AccountSchema = new mongoose.Schema({
-  //reference to the User table so that anyone cannot just type anything and there has to be a user to get the account access
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },
-  publicKey: { type: String, required: true },
-  privateKey: { type: String, required: true },
-  balance: { type: String, required: true },
-});
-
-const Account = mongoose.model("Account", AccountSchema);
-module.exports = { User, Account };
+module.exports = { User };

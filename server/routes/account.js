@@ -4,23 +4,8 @@ const { Account, User } = require("../db/index");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { createAccount } = require("../solana/createAccount");
 const bcrypt = require("bcryptjs");
-const { balance } = require("../solana/balance");
+const { balanceCheck } = require("../solana/balance");
 
-router.get("/balance", authMiddleware, async (req, res) => {
-  const userId = req.userId;
-
-  const userBalance = await Account.findOne({ userId });
-
-  if (userBalance) {
-    res.json({
-      balance: userBalance.balance,
-    });
-  } else {
-    res.json({
-      msg: "error",
-    });
-  }
-});
 router.post("/create-account", async (req, res) => {
   let { username, password } = req.body;
   username = username?.toLowerCase();
@@ -33,36 +18,36 @@ router.post("/create-account", async (req, res) => {
       password,
       validateUser.password
     );
-    const accountExists = await Account.findOne({
-      userId: validateUser._id,
-    });
+
     if (validatePassword) {
-      if (accountExists) {
-        return res.status(403).json({
-          msg: "account already exists",
+      const { publicKeyString, secretKeyString } = await createAccount();
+      const balance = await balanceCheck(publicKeyString);
+
+      const userUpdated = await User.updateOne(
+        { username },
+        {
+          $push: {
+            accounts: {
+              publicKey: publicKeyString,
+              privateKey: secretKeyString,
+              balance,
+            },
+          },
+        }
+      );
+      if (userUpdated) {
+        return res.status(200).json({
+          msg: "account successfully created",
         });
       }
-
-      const returnValue = await createAccount();
-      const balanceAvailable = await balance(returnValue.publicKeyString);
-
-      await Account.create({
-        userId: validateUser._id,
-        publicKey: returnValue.publicKeyString,
-        privateKey: returnValue.secretKeyString,
-        balance: balanceAvailable,
-      });
-      return res.json({
-        msg: "account created successfully",
-      });
     } else {
       return res.status(401).json({
         msg: "wrong password",
       });
     }
   } else {
-    return res.status(403).json({
-      msg: "user not found",
+    return res.status(404).json({
+      msg: "User does not exist",
     });
   }
 });

@@ -11,9 +11,7 @@ async function createAccount() {
 
   //   console.log("Public Key:", publicKeyString);
   //   console.log("Secret Key:", secretKeyString);
-
   return { publicKeyString, secretKeyString };
 }
 
-createAccount();
 module.exports = { createAccount };
