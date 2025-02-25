@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const { balanceCheck } = require("../solana/balance");
 const { addAccount } = require("../solana/addAccount");
 const { authMiddleware } = require("../middlewares/authMiddleware");
+const { transactionHistory } = require("../solana/transactionHistory");
 
 router.post("/create-account", authMiddleware, async (req, res) => {
   username = req.username;
@@ -111,6 +112,32 @@ router.get("/balance", authMiddleware, async (req, res) => {
   } catch (err) {
     return res.status(404).json({
       msg: "could not fetch balance",
+    });
+  }
+});
+
+router.get("/accounts", authMiddleware, async (req, res) => {
+  const username = req.username;
+  const activeUser = await User.findOne({ username });
+  if (activeUser)
+    return res.json({
+      accounts: activeUser.accounts,
+    });
+  else {
+    return res.status(404).json({
+      msg: "error finding accounts",
+    });
+  }
+});
+router.get("/transactions", authMiddleware, async (req, res) => {
+  const publicKey = req.body.publicKey;
+
+  try {
+    const transactionList = await transactionHistory(publicKey);
+    return res.json({ transactions: transactionList });
+  } catch (err) {
+    return res.status(403).json({
+      msg: "error fetching transaction",
     });
   }
 });
