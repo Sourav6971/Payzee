@@ -19,14 +19,13 @@ const PasswordModal = ({ isOpen, onClose, onConfirm }) => {
           type="password"
           className="input input-bordered w-full bg-white/10 text-white placeholder-gray-300 backdrop-blur-md p-2 rounded-sm "
           placeholder="Enter Password"
-          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <div className="flex flex-col space-y-3 mt-6">
           <button
             onClick={() => onConfirm(password)}
-            className="btn btn-primary btn-block bg-blue-600 hover:bg-blue-700 glass rounded-sm p-2"
+            className="btn btn-primary btn-block bg-blue-600 hover:bg-blue-700 glass rounded-sm p-2 cursor-pointer"
           >
             Confirm
           </button>
@@ -35,7 +34,7 @@ const PasswordModal = ({ isOpen, onClose, onConfirm }) => {
         <div className="flex justify-center mt-4">
           <button
             onClick={onClose}
-            className="btn btn-outline btn-sm text-gray-300 hover:text-white"
+            className="btn btn-outline btn-sm text-gray-300 hover:text-white cursor-pointer"
           >
             Cancel
           </button>
