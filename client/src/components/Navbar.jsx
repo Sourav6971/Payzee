@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState("Login");
-  const navItems = ["Home", "Market", "Dashboard", "Tutorials"];
+  const navItems = ["Home", "Dashboard", "Market", "Tutorials"];
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
 

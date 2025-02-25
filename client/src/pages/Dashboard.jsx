@@ -1,61 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { LuCopy } from "react-icons/lu";
 import { MdOutlineCheckCircle } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  // Hardcoded values for transactions and accounts
-  const transactions = [
-    { id: 1, description: "Coffee Shop", amount: "-$5.50", date: "2023-10-01" },
-    {
-      id: 2,
-      description: "Freelance Payment",
-      amount: "+$250.00",
-      date: "2023-10-02",
-    },
-    {
-      id: 3,
-      description: "Electric Bill",
-      amount: "-$80.00",
-      date: "2023-10-03",
-    },
-  ];
-
-  const accounts = [
-    {
-      id: 1,
-      name: "Account 1",
-      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
-      balance: ".012",
-    },
-    {
-      id: 1,
-      name: "Account 1",
-      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
-      balance: ".012",
-    },
-    {
-      id: 1,
-      name: "Account 1",
-      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
-      balance: ".012",
-    },
-    {
-      id: 1,
-      name: "Account 1",
-      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
-      balance: ".012",
-    },
-    {
-      id: 1,
-      name: "Account 1",
-      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
-      balance: ".012",
-    },
-  ];
-
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+    } else {
+      navigate("/Auth");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#111827] to-[#1F2937] text-white pt-20">
@@ -63,7 +21,7 @@ const Dashboard = () => {
       <div className="container mx-auto p-6">
         {/* Dashboard Header */}
         <div className="p-6 rounded-xl shadow-lg">
-          <h1 className="text-3xl font-bold text-[#38BDF8]">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-[#38BDF8]">Accounts</h1>
         </div>
 
         {/* Box Container for Content */}
@@ -71,15 +29,15 @@ const Dashboard = () => {
           {/* Account Information Section */}
           <div className="mb-8">
             <div className="border-b border-white/20 pb-2 mb-4">
-              <h2 className="text-2xl font-semibold text-[#38BDF8]">
+              {/* <h2 className="text-2xl font-semibold text-[#38BDF8]">
                 Accounts
-              </h2>
+              </h2> */}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 ">
+            <div className="grid grid-cols-1 gap-3">
               {accounts.map((account) => (
                 <div
                   key={account.id}
-                  className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 p-6 rounded-lg justify-center h-max w-full grid grid-cols-2 gap-y-10 gap-x-36  "
+                  className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 py-2 px-6 rounded-lg  h-max w-full flex flex-col-1 justify-between  "
                 >
                   <div>
                     <h3 className="text-xl font-bold">{account.name}</h3>
@@ -91,10 +49,10 @@ const Dashboard = () => {
                     </p>
                     <p className="text-lg flex items-center space-x-2">
                       <span className="badge badge-primary">
-                        {account.publicKey.substring(0, 2) +
-                          "...." +
+                        {account.publicKey.substring(0, 3) +
+                          "..............." +
                           account.publicKey.substring(
-                            account.publicKey.length - 3,
+                            account.publicKey.length - 4,
                             account.publicKey.length
                           )}
                       </span>
@@ -115,15 +73,17 @@ const Dashboard = () => {
                       </button>
                     </p>
                   </div>
-                  <button className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-600 hover:bg-red-700 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer">
-                    View Private Key
-                  </button>
+                  <div>
+                    <button className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-600 hover:bg-red-700 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer ">
+                      View Private Key
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Transactions Section */}
+          {/* Transactions Section
           <div>
             <div className="border-b border-white/20 pb-2 mb-4">
               <h2 className="text-2xl font-semibold text-[#38BDF8]">
@@ -165,7 +125,7 @@ const Dashboard = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />
