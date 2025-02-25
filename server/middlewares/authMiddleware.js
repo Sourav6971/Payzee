@@ -6,7 +6,7 @@ const { User } = require("../db/index");
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer"))
-    res.json({
+    return res.json({
       msg: "Session timed out",
     });
   const jwtToken = authHeader.split(" ")[1];

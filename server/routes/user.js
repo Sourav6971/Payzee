@@ -134,31 +134,20 @@ router.put("/update_user", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/view", authMiddleware, async (req, res) => {
-  const filter = req.query.filter || "";
+router.post("/verify-password", authMiddleware, async (req, res) => {
+  const password = req.body.password;
   try {
-    const user = await User.find({
-      $or: [
-        { firstName: { $regex: filter } },
-        { lastName: { $regex: filter } },
-      ],
-    });
-    if (user.length) {
-      res.json({
-        users: user.map((index) => ({
-          username: index.username,
-          firstName: index.firstName,
-          lastName: index.lastName,
-          _id: index._id,
-        })),
-      });
+    const user = await User.findOne({ username: req.username });
+    const validation = bcrypt.compareSync(password, user.password);
+    if (validation) {
+      return res.status(200).json({ msg: true });
     } else {
-      res.json({
-        msg: "user not found",
-      });
+      throw new error();
     }
   } catch (err) {
-    res.json({ msg: "user not found" });
+    return res.json({
+      msg: false,
+    });
   }
 });
 

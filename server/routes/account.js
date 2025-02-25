@@ -116,7 +116,7 @@ router.get("/balance", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/accounts", authMiddleware, async (req, res) => {
+router.get("/dashboard", authMiddleware, async (req, res) => {
   const username = req.username;
   const activeUser = await User.findOne({ username });
   if (activeUser)

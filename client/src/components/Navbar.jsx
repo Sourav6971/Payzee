@@ -49,6 +49,7 @@ const Navbar = () => {
             if (isLoggedIn === "Logout") {
               localStorage.removeItem("token");
               setIsLoggedIn("Login");
+              navigate("/Home");
             } else {
               navigate("/Auth");
             }
