@@ -9,8 +9,12 @@ import axios from "axios";
 import AccountModal from "../components/AccountModal";
 import PasswordModal from "../components/PasswordModal";
 import Loader from "../components/Loader";
+import PrivateKeyModal from "../components/PrivateKeyModal";
 
 const Dashboard = () => {
+  const [isPrivateKeyInputModalOpen, setIsPrivateKeyInputModalOpen] =
+    useState(false);
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
@@ -28,12 +32,15 @@ const Dashboard = () => {
     }
   };
 
-  const handleCreateAccount = () => {
+  const handleAddExistingAccount = () => {
+    setSelectedAccount(null);
     setIsAccountModalOpen(false);
     setIsPasswordModalOpen(true);
+    sessionStorage.setItem("isAddingExisting", "true"); // Store the intent
   };
 
-  const handleAddExistingAccount = () => {
+  const handleCreateAccount = () => {
+    setSelectedAccount(null); // Reset previously selected account
     setIsAccountModalOpen(false);
     setIsPasswordModalOpen(true);
   };
@@ -46,11 +53,22 @@ const Dashboard = () => {
     );
 
     if (response.data.msg) {
-      setSelectedAccount(accounts.find((acc) => acc._id === accountId));
-      setIsPrivateKeyModalOpen(true);
+      const isAddingExisting =
+        sessionStorage.getItem("isAddingExisting") === "true";
+
+      if (accountId) {
+        // Viewing an existing private key
+        setSelectedAccount(accounts.find((acc) => acc._id === accountId));
+        setIsPrivateKeyModalOpen(true);
+      } else if (isAddingExisting) {
+        // Open private key input modal only for "Add Existing Account"
+        setIsPrivateKeyInputModalOpen(true);
+      }
     } else {
       alert("Wrong password");
     }
+
+    sessionStorage.removeItem("isAddingExisting"); // Clear the intent
     setIsPasswordModalOpen(false);
   };
 
@@ -128,7 +146,7 @@ const Dashboard = () => {
                           setSelectedAccount(account);
                           setIsPasswordModalOpen(true);
                         }}
-                        className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-600 hover:bg-red-700 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer"
+                        className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-400 hover:bg-red-500 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer"
                       >
                         View Private Key
                       </button>
@@ -181,11 +199,24 @@ const Dashboard = () => {
       />
       <PasswordModal
         isOpen={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
+        onClose={() => {
+          sessionStorage.removeItem("isAddingExisting"); // Clear if closed
+          setIsPasswordModalOpen(false);
+        }}
         onConfirm={(password) =>
           handlePasswordConfirm(password, selectedAccount?._id)
         }
       />
+
+      <PrivateKeyModal
+        isOpen={isPrivateKeyInputModalOpen}
+        onClose={() => setIsPrivateKeyInputModalOpen(false)}
+        onSave={(privateKey) => {
+          console.log("Private Key Saved:", privateKey);
+          setIsPrivateKeyInputModalOpen(false);
+        }}
+      />
+
       <Footer />
     </div>
   );
