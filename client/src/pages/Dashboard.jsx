@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { LuCopy } from "react-icons/lu";
+import { MdOutlineCheckCircle } from "react-icons/md";
 
 const Dashboard = () => {
   // Hardcoded values for transactions and accounts
@@ -21,11 +23,39 @@ const Dashboard = () => {
   ];
 
   const accounts = [
-    { id: 1, name: "Checking Account", balance: "$3,450.00" },
-    { id: 2, name: "Savings Account", balance: "$7,200.00" },
-    { id: 3, name: "Crypto Wallet", balance: "0.25 BTC" },
-    { id: 4, name: "mywallet", balance: "0.34 sou" },
+    {
+      id: 1,
+      name: "Account 1",
+      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
+      balance: ".012",
+    },
+    {
+      id: 1,
+      name: "Account 1",
+      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
+      balance: ".012",
+    },
+    {
+      id: 1,
+      name: "Account 1",
+      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
+      balance: ".012",
+    },
+    {
+      id: 1,
+      name: "Account 1",
+      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
+      balance: ".012",
+    },
+    {
+      id: 1,
+      name: "Account 1",
+      publicKey: "0xr25332ndhfndkfnskfjsnbgugoshsnoi5",
+      balance: ".012",
+    },
   ];
+
+  const [copied, setCopied] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#111827] to-[#1F2937] text-white pt-20">
@@ -45,21 +75,48 @@ const Dashboard = () => {
                 Accounts
               </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 ">
               {accounts.map((account) => (
                 <div
                   key={account.id}
-                  className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 p-6 rounded-lg transition transform hover:scale-105"
+                  className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 p-6 rounded-lg justify-center h-max w-full grid grid-cols-2 gap-y-10 gap-x-36  "
                 >
-                  <h3 className="text-xl font-bold">{account.name}</h3>
-                  <p className="text-lg">
-                    Balance:{" "}
-                    <span className="badge badge-primary">
-                      {account.balance}
-                    </span>
-                  </p>
-                  <button className="btn btn-outline btn-sm mt-3 hover:bg-[#38BDF8] hover:text-white">
-                    View Details
+                  <div>
+                    <h3 className="text-xl font-bold">{account.name}</h3>
+                    <p className="text-lg flex items-center space-x-2">
+                      <span>Balance: </span>
+                      <span className="badge badge-primary ">
+                        {account.balance + " (SOL)"}
+                      </span>
+                    </p>
+                    <p className="text-lg flex items-center space-x-2">
+                      <span className="badge badge-primary">
+                        {account.publicKey.substring(0, 2) +
+                          "...." +
+                          account.publicKey.substring(
+                            account.publicKey.length - 3,
+                            account.publicKey.length
+                          )}
+                      </span>
+                      <button
+                        onClick={() => {
+                          console.log("clicked");
+                          navigator.clipboard.writeText(account.publicKey);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 1500);
+                        }}
+                        className="p-1  transition cursor-pointer "
+                      >
+                        {copied ? (
+                          <MdOutlineCheckCircle size={20} />
+                        ) : (
+                          <LuCopy />
+                        )}
+                      </button>
+                    </p>
+                  </div>
+                  <button className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-600 hover:bg-red-700 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer">
+                    View Private Key
                   </button>
                 </div>
               ))}

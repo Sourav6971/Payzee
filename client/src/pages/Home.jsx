@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import AccountModal from "../components/AccountModal";
+import PasswordModal from "../components/PasswordModal";
+import { useNavigate } from "react-router-dom";
 
 const Input = ({ placeholder, name, type, handleChange, value }) => (
   <input
@@ -9,14 +13,42 @@ const Input = ({ placeholder, name, type, handleChange, value }) => (
     name={name}
     type={type}
     onChange={(e) => handleChange(e, name)}
-    step={"0.0001"}
     value={value}
     className="my-2 w-full rounded-lg p-3 outline-none bg-transparent text-white border border-gray-500 text-sm white-glassmorphism"
   />
 );
 
 const Home = () => {
-  const connectWallet = () => {};
+  const navigate = useNavigate();
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [actionType, setActionType] = useState(""); // To store selected action (Create or Add)
+
+  const addAccount = () => {
+    if (!localStorage.getItem("token")) {
+      navigate("/Auth");
+    } else {
+      setIsAccountModalOpen(true);
+    }
+  };
+
+  const handleCreateAccount = () => {
+    setIsAccountModalOpen(false);
+    setActionType("create");
+    setIsPasswordModalOpen(true);
+  };
+
+  const handleAddExistingAccount = () => {
+    setIsAccountModalOpen(false);
+    setActionType("add");
+    setIsPasswordModalOpen(true);
+  };
+
+  const handlePasswordConfirm = (password) => {
+    setIsPasswordModalOpen(false);
+    console.log(`${actionType} account with password:`, password);
+    // Handle password authentication logic here
+  };
   const handleSubmit = () => {};
   return (
     <div>
@@ -35,10 +67,10 @@ const Home = () => {
             </p>
             <button
               type="button"
-              onClick={connectWallet}
+              onClick={addAccount}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-lg transition-all"
             >
-              Connect Wallet
+              Add Account
             </button>
           </div>
 
@@ -54,15 +86,9 @@ const Home = () => {
               <Input
                 placeholder="Amount (SOL)"
                 name="amount"
-                type="number"
                 handleChange={() => {}}
               />
-              <Input
-                placeholder="Keyword (Gif)"
-                name="keyword"
-                type="text"
-                handleChange={() => {}}
-              />
+
               <Input
                 placeholder="Enter Message"
                 name="message"
@@ -76,7 +102,7 @@ const Home = () => {
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="w-full py-3 text-white font-semibold border border-gray-500 rounded-full hover:bg-gray-700 transition-all"
+                  className="w-full py-3 text-white font-semibold border border-gray-500 rounded-full hover:bg-green-700 transition-all cursor-pointer"
                 >
                   Send Now
                 </button>
@@ -85,6 +111,20 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer />
+
+      {/* Modal Component */}
+      <AccountModal
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+        onCreate={handleCreateAccount}
+        onAddExisting={handleAddExistingAccount}
+      />
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onConfirm={handlePasswordConfirm}
+      />
     </div>
   );
 };
