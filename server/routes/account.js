@@ -55,7 +55,7 @@ router.post("/create-account", authMiddleware, async (req, res) => {
 
 router.post("/add-existing", authMiddleware, async (req, res) => {
   const username = req.username;
-  const { password, privateKey } = req.body;
+  const { privateKey } = req.body;
 
   const availableUser = await User.findOne({ username });
   if (!availableUser) {
@@ -63,13 +63,7 @@ router.post("/add-existing", authMiddleware, async (req, res) => {
       msg: "user not found",
     });
   }
-  const correctPassword = availableUser.password;
-  const validatePassword = bcrypt.compareSync(password, correctPassword);
-  if (!validatePassword) {
-    return res.json({
-      msg: "wrong password",
-    });
-  }
+
   const publicAddress = await addAccount(privateKey);
 
   const existingAccount = await User.findOne({
@@ -77,7 +71,7 @@ router.post("/add-existing", authMiddleware, async (req, res) => {
     "accounts.publicKey": publicAddress,
   });
   if (existingAccount) {
-    return res.json({ msg: "public key must be unique" });
+    return res.json({ msg: "account already exists" });
   }
 
   const addedAccount = await User.updateOne(
