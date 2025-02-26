@@ -33,6 +33,13 @@ const Home = () => {
   };
 
   const handleSubmit = async () => {
+    if (!localStorage.getItem("token")) {
+      alert("user not signed in");
+      navigate("/Auth");
+    } else if (!publicKey || !amount || !addressTo) {
+      alert("Fill all the fields");
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.post(
