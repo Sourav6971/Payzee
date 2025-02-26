@@ -121,7 +121,7 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
   const activeUser = await User.findOne({ username });
   if (activeUser)
     return res.json({
-      accounts: activeUser.accounts,
+      user: activeUser,
     });
   else {
     return res.status(404).json({
