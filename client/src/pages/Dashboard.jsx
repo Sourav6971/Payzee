@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [firstName, setFirstName] = useState("");
 
   const navigate = useNavigate();
+  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const [copied, setCopied] = useState(false);
@@ -42,9 +43,10 @@ const Dashboard = () => {
   };
 
   const handleCreateAccount = () => {
-    setSelectedAccount(null); // Reset previously selected account
+    setSelectedAccount(null);
     setIsAccountModalOpen(false);
     setIsPasswordModalOpen(true);
+    sessionStorage.setItem("isCreatingAccount", "true"); // Store the intent
   };
 
   const handlePasswordConfirm = async (password, accountId) => {
@@ -55,22 +57,25 @@ const Dashboard = () => {
     );
 
     if (response.data.msg) {
-      const isAddingExisting =
-        sessionStorage.getItem("isAddingExisting") === "true";
+      const isCreatingAccount =
+        sessionStorage.getItem("isCreatingAccount") === "true";
 
-      if (accountId) {
-        // Viewing an existing private key
+      if (isCreatingAccount) {
+        const message = await useBackend("create-account", null);
+        alert(message);
+        setReload(true);
+      } else if (accountId) {
         setSelectedAccount(accounts.find((acc) => acc._id === accountId));
         setIsPrivateKeyModalOpen(true);
-      } else if (isAddingExisting) {
-        // Open private key input modal only for "Add Existing Account"
+      } else {
         setIsPrivateKeyInputModalOpen(true);
       }
     } else {
       alert("Wrong password");
     }
 
-    sessionStorage.removeItem("isAddingExisting"); // Clear the intent
+    sessionStorage.removeItem("isAddingExisting");
+    sessionStorage.removeItem("isCreatingAccount"); // Clear the intent
     setIsPasswordModalOpen(false);
   };
 
@@ -88,7 +93,7 @@ const Dashboard = () => {
     } else {
       navigate("/Auth");
     }
-  }, []);
+  }, [reload]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#111827] to-[#1F2937] text-white pt-20">
@@ -220,7 +225,9 @@ const Dashboard = () => {
         onSave={async (privateKey) => {
           setIsPrivateKeyInputModalOpen(false);
           const message = await useBackend("add-existing", privateKey);
+
           alert(message);
+          setReload(true);
         }}
       />
 
