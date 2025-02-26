@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export async function useBackend(method, privateKey) {
   const response = await axios.post(
-    "http://localhost:8000/api/account/" + method,
+    "https://payzee-taupe.vercel.app/api/account/" + method,
     { privateKey },
     {
       headers: {

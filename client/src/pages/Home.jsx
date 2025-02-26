@@ -36,7 +36,7 @@ const Home = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/transaction",
+        "https://payzee-taupe.vercel.app/api/transaction",
         {
           fromAddress: publicKey,
           toAddress: addressTo,

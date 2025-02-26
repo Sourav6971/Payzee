@@ -8,12 +8,9 @@ import Tutorials from "./pages/Tutorials";
 import Market from "./pages/Market";
 
 const App = () => {
-  const navigate = useNavigate();
-  const [isSignedIn, setSignedIn] = useState(false);
-
   useEffect(() => {
     axios
-      .post("http://localhost:8000/api/user/me", {
+      .post("https://payzee-taupe.vercel.app/api/user/me", {
         token: "Bearer " + localStorage.getItem("token"),
       })
       .then((res) => {

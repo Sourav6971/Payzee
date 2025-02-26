@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   const handlePasswordConfirm = async (password, accountId) => {
     const response = await axios.post(
-      "http://localhost:8000/api/user/verify-password",
+      "https://payzee-taupe.vercel.app/api/user/verify-password",
       { password },
       { headers: { authorization: "Bearer " + localStorage.getItem("token") } }
     );
@@ -82,7 +82,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       axios
-        .get("http://localhost:8000/api/account/dashboard", {
+        .get("https://payzee-taupe.vercel.app/api/account/dashboard", {
           headers: { authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {

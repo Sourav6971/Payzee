@@ -24,7 +24,7 @@ const SignUp = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/user/signup",
+        "https://payzee-taupe.vercel.app/api/user/signup",
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
