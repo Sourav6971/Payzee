@@ -16,13 +16,13 @@ const AccountModal = ({ isOpen, onClose, onCreate, onAddExisting }) => {
         <div className="flex flex-col space-y-4">
           <button
             onClick={onCreate}
-            className="btn btn-primary btn-block bg-blue-600 hover:bg-blue-700 glass rounded-md py-2"
+            className="btn btn-primary btn-block bg-blue-600 hover:bg-blue-700 glass rounded-md py-2 cursor-pointer"
           >
             Create New Account
           </button>
           <button
             onClick={onAddExisting}
-            className="btn btn-secondary btn-block bg-gray-700 hover:bg-gray-800 glass rounded-md py-2"
+            className="btn btn-secondary btn-block bg-gray-700 hover:bg-gray-800 glass rounded-md py-2 cursor-pointer"
           >
             Add Existing Account
           </button>
@@ -31,7 +31,7 @@ const AccountModal = ({ isOpen, onClose, onCreate, onAddExisting }) => {
         <div className="flex justify-center mt-4">
           <button
             onClick={onClose}
-            className="btn btn-outline btn-sm text-gray-300 hover:text-white"
+            className="btn btn-outline btn-sm text-gray-300 hover:text-white cursor-pointer "
           >
             Cancel
           </button>

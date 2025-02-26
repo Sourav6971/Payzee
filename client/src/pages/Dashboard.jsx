@@ -9,9 +9,16 @@ import axios from "axios";
 import AccountModal from "../components/AccountModal";
 import PasswordModal from "../components/PasswordModal";
 import Loader from "../components/Loader";
+import PrivateKeyModal from "../components/PrivateKeyModal";
+import { useBackend } from "../hooks/useBackend";
 
 const Dashboard = () => {
+  const [isPrivateKeyInputModalOpen, setIsPrivateKeyInputModalOpen] =
+    useState(false);
+  const [firstName, setFirstName] = useState("");
+
   const navigate = useNavigate();
+  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const [copied, setCopied] = useState(false);
@@ -28,14 +35,18 @@ const Dashboard = () => {
     }
   };
 
-  const handleCreateAccount = () => {
+  const handleAddExistingAccount = () => {
+    setSelectedAccount(null);
     setIsAccountModalOpen(false);
     setIsPasswordModalOpen(true);
+    sessionStorage.setItem("isAddingExisting", "true"); // Store the intent
   };
 
-  const handleAddExistingAccount = () => {
+  const handleCreateAccount = () => {
+    setSelectedAccount(null);
     setIsAccountModalOpen(false);
     setIsPasswordModalOpen(true);
+    sessionStorage.setItem("isCreatingAccount", "true"); // Store the intent
   };
 
   const handlePasswordConfirm = async (password, accountId) => {
@@ -46,11 +57,25 @@ const Dashboard = () => {
     );
 
     if (response.data.msg) {
-      setSelectedAccount(accounts.find((acc) => acc._id === accountId));
-      setIsPrivateKeyModalOpen(true);
+      const isCreatingAccount =
+        sessionStorage.getItem("isCreatingAccount") === "true";
+
+      if (isCreatingAccount) {
+        const message = await useBackend("create-account", null);
+        alert(message);
+        setReload(true);
+      } else if (accountId) {
+        setSelectedAccount(accounts.find((acc) => acc._id === accountId));
+        setIsPrivateKeyModalOpen(true);
+      } else {
+        setIsPrivateKeyInputModalOpen(true);
+      }
     } else {
       alert("Wrong password");
     }
+
+    sessionStorage.removeItem("isAddingExisting");
+    sessionStorage.removeItem("isCreatingAccount"); // Clear the intent
     setIsPasswordModalOpen(false);
   };
 
@@ -61,18 +86,22 @@ const Dashboard = () => {
           headers: { authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
-          setAccounts(response.data.accounts);
+          setAccounts(response.data.user.accounts);
+          setFirstName(response.data.user["firstName"]);
         })
         .finally(() => setLoading(false));
     } else {
       navigate("/Auth");
     }
-  }, []);
+  }, [reload]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#111827] to-[#1F2937] text-white pt-20">
       <Navbar />
       <div className="container mx-auto p-6">
+        <h2 className="text-4xl p-10 font-semi font-mono">
+          {"Welcome back " + firstName + "!"}
+        </h2>
         <div className="p-6 rounded-xl shadow-lg flex flex-col-1 justify-between">
           <h1 className="text-3xl font-bold text-[#38BDF8]">Accounts</h1>
           <button
@@ -128,7 +157,7 @@ const Dashboard = () => {
                           setSelectedAccount(account);
                           setIsPasswordModalOpen(true);
                         }}
-                        className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-600 hover:bg-red-700 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer"
+                        className="btn btn-outline btn-sm mt-3 rounded-md py-3 bg-red-400 hover:bg-red-500 hover:text-white h-10 w-max p-3 text-center flex items-center cursor-pointer"
                       >
                         View Private Key
                       </button>
@@ -181,11 +210,27 @@ const Dashboard = () => {
       />
       <PasswordModal
         isOpen={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
+        onClose={() => {
+          sessionStorage.removeItem("isAddingExisting"); // Clear if closed
+          setIsPasswordModalOpen(false);
+        }}
         onConfirm={(password) =>
           handlePasswordConfirm(password, selectedAccount?._id)
         }
       />
+
+      <PrivateKeyModal
+        isOpen={isPrivateKeyInputModalOpen}
+        onClose={() => setIsPrivateKeyInputModalOpen(false)}
+        onSave={async (privateKey) => {
+          setIsPrivateKeyInputModalOpen(false);
+          const message = await useBackend("add-existing", privateKey);
+
+          alert(message);
+          setReload(true);
+        }}
+      />
+
       <Footer />
     </div>
   );

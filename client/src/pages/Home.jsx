@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-
+import axios from "axios";
 import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
 import { useNavigate } from "react-router-dom";
 
 const Input = ({ placeholder, name, type, handleChange, value }) => (
@@ -20,7 +19,46 @@ const Input = ({ placeholder, name, type, handleChange, value }) => (
 const Home = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = () => {};
+  const [publicKey, setPublicKey] = useState("");
+  const [addressTo, setAddressTo] = useState("");
+  const [amount, setAmount] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
+
+  const handleChange = (e, field) => {
+    if (field === "publicKey") setPublicKey(e.target.value);
+    if (field === "addressTo") setAddressTo(e.target.value);
+    if (field === "amount") setAmount(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/transaction",
+        {
+          fromAddress: publicKey,
+          toAddress: addressTo,
+          amount,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setResponseMessage(response.data.msg);
+      console.log(response.data.signature);
+    } catch (error) {
+      setResponseMessage("Transaction failed.");
+    }
+    setLoading(false);
+    setTimeout(() => {
+      setResponseMessage("");
+    }, 1500);
+  };
+
   return (
     <div>
       <Navbar />
@@ -37,9 +75,7 @@ const Home = () => {
               <b className="text-xl">Payzee!</b>
               <button
                 type="button"
-                onClick={() => {
-                  navigate("/Dashboard");
-                }}
+                onClick={() => navigate("/Dashboard")}
                 className="px-6 mt-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full shadow-lg transition-all cursor-pointer"
               >
                 Go to Dashboard
@@ -51,25 +87,28 @@ const Home = () => {
           <div className="flex flex-col items-center w-full md:w-1/2 space-y-6">
             <div className="p-6 sm:w-96 w-full flex flex-col items-center blue-glassmorphism shadow-xl rounded-lg">
               <Input
-                placeholder="Address To"
+                placeholder="Private Key of the account"
+                name="publicKey"
+                type="text"
+                handleChange={handleChange}
+                value={publicKey}
+              />
+              <Input
+                placeholder="Recievers address"
                 name="addressTo"
                 type="text"
-                handleChange={() => {}}
+                handleChange={handleChange}
+                value={addressTo}
               />
               <Input
                 placeholder="Amount (SOL)"
                 name="amount"
-                handleChange={() => {}}
+                handleChange={handleChange}
+                value={amount}
               />
 
-              <Input
-                placeholder="Enter Message"
-                name="message"
-                type="text"
-                handleChange={() => {}}
-              />
               <div className="h-[1px] w-full bg-gray-400 my-3" />
-              {false ? (
+              {loading ? (
                 <Loader />
               ) : (
                 <button
@@ -79,6 +118,9 @@ const Home = () => {
                 >
                   Send Now
                 </button>
+              )}
+              {responseMessage && (
+                <p className="text-white mt-3">{responseMessage}</p>
               )}
             </div>
           </div>
