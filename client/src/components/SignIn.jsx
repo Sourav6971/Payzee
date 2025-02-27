@@ -32,7 +32,7 @@ const SignIn = () => {
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         alert("Sign in successful");
-        navigate("/Home");
+        navigate("/Dashboard");
       } else {
         alert("Sign in failed");
       }

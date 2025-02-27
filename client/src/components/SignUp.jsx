@@ -36,7 +36,7 @@ const SignUp = () => {
         console.log(response.data.token);
         alert("Signup successful");
         localStorage.setItem("token", response.data.token);
-        navigate("/home");
+        navigate("/Dashboard");
       } else if (response.status === 409) {
         alert("User already exists");
       }
