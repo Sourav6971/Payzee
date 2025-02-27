@@ -67,7 +67,7 @@ const Dashboard = () => {
       } else if (accountId) {
         setSelectedAccount(accounts.find((acc) => acc._id === accountId));
         setIsPrivateKeyModalOpen(true);
-      } else {
+      } else if (!isCreatingAccount) {
         setIsPrivateKeyInputModalOpen(true);
       }
     } else {
