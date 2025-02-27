@@ -59,6 +59,21 @@ const Navbar = () => {
         </li>
       </ul>
       <div className="flex relative">
+        <div
+          className="bg-[#38BDF8] py-2 px-7  rounded-full cursor-pointer hover:bg-[#1E90FF] 
+                      transition duration-300  mx-16 shadow-md md:hidden "
+          onClick={() => {
+            if (isLoggedIn === "Logout") {
+              localStorage.removeItem("token");
+              setIsLoggedIn("Login");
+              navigate("/Dashboard");
+            } else {
+              navigate("/Auth");
+            }
+          }}
+        >
+          {isLoggedIn}
+        </div>
         {toggleMenu ? (
           <AiOutlineClose
             fontSize={28}
@@ -95,21 +110,6 @@ const Navbar = () => {
                 classProps="m-2 text-lg"
               />
             ))}
-            <li
-              className="bg-[#38BDF8] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#1E90FF] 
-                     transition duration-300 shadow-md"
-              onClick={() => {
-                if (isLoggedIn === "Logout") {
-                  localStorage.removeItem("token");
-                  setIsLoggedIn("Login");
-                  navigate("/Dashboard");
-                } else {
-                  navigate("/Auth");
-                }
-              }}
-            >
-              {isLoggedIn}
-            </li>
           </ul>
         )}
       </div>
