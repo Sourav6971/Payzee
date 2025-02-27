@@ -120,7 +120,7 @@ const Dashboard = () => {
                 accounts.map((account, index) => (
                   <div
                     key={account._id}
-                    className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 py-2 px-6 rounded-lg h-max w-full flex flex-col-1 justify-between"
+                    className="card bg-white/10 backdrop-blur-lg shadow-lg border border-white/20 py-2 px-6 rounded-lg h-max w-full lg:flex lg:flex-cols-1 justify-between"
                   >
                     <div>
                       <h3 className="text-xl font-bold">
