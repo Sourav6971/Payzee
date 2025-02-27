@@ -32,12 +32,13 @@ const SignUp = () => {
           password: formData.password,
         }
       );
-      if (response.data.token) {
-        alert("Sign up successful");
+      if (response.status === 200) {
+        console.log(response.data.token);
+        alert("Signup successful");
         localStorage.setItem("token", response.data.token);
         navigate("/home");
-      } else {
-        alert("Sign up failed check email or password");
+      } else if (response.status === 409) {
+        alert("User already exists");
       }
     } catch (err) {
       if (err.response.status === 409) {
