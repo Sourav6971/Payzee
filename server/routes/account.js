@@ -17,33 +17,22 @@ router.post("/create-account", authMiddleware, async (req, res) => {
     username,
   });
   if (validateUser) {
-    const validatePassword = bcrypt.compareSync(
-      password,
-      validateUser.password
-    );
+    const { publicKeyString, secretKeyString } = await createAccount();
 
-    if (validatePassword) {
-      const { publicKeyString, secretKeyString } = await createAccount();
-
-      const userUpdated = await User.updateOne(
-        { username },
-        {
-          $push: {
-            accounts: {
-              publicKey: publicKeyString,
-              privateKey: secretKeyString,
-            },
+    const userUpdated = await User.updateOne(
+      { username },
+      {
+        $push: {
+          accounts: {
+            publicKey: publicKeyString,
+            privateKey: secretKeyString,
           },
-        }
-      );
-      if (userUpdated) {
-        return res.status(200).json({
-          msg: "account successfully created",
-        });
+        },
       }
-    } else {
-      return res.status(401).json({
-        msg: "wrong password",
+    );
+    if (userUpdated) {
+      return res.status(200).json({
+        msg: "account successfully created",
       });
     }
   } else {
