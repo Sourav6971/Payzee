@@ -50,6 +50,7 @@ const Dashboard = () => {
   };
 
   const handlePasswordConfirm = async (password, accountId) => {
+    setLoading(true);
     const response = await axios.post(
       "https://payzee-taupe.vercel.app/api/user/verify-password",
       { password },
@@ -61,7 +62,9 @@ const Dashboard = () => {
         sessionStorage.getItem("isCreatingAccount") === "true";
 
       if (isCreatingAccount) {
+        setLoading(true);
         const message = await useBackend("create-account", null);
+
         alert(message);
         setReload(true);
       } else if (accountId) {
@@ -217,6 +220,7 @@ const Dashboard = () => {
         onConfirm={(password) =>
           handlePasswordConfirm(password, selectedAccount?._id)
         }
+        loading={loading}
       />
 
       <PrivateKeyModal
