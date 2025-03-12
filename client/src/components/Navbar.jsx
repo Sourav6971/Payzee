@@ -28,8 +28,8 @@ const Navbar = () => {
 
   return (
     <nav
-      className="w-full fixed top-0 left-0 z-50 flex md:justify-center justify-between text-center p-4 
-                 bg-gradient-to-r from-[#141E30] to-[#243B55] shadow-md" // Dark gradient with shadow
+      className="w-full top-0 left-0 z-50 flex md:justify-center justify-between text-center p-4 
+                 bg-gradient-to-r from-[#141E30] to-[#243B55] shadow-md md:px-8" // Added padding for small devices
     >
       <div className="md:flex-[0.5] flex-col flex-initial justify-center items-center">
         <div className="flex items-center">
@@ -58,10 +58,10 @@ const Navbar = () => {
           {isLoggedIn}
         </li>
       </ul>
-      <div className="flex relative">
+      <div className="flex relative md:hidden">
         <div
-          className="bg-[#38BDF8] py-2 px-7  rounded-full cursor-pointer hover:bg-[#1E90FF] 
-                      transition duration-300  mx-16 shadow-md md:hidden "
+          className="bg-[#38BDF8] py-2 px-7 rounded-full cursor-pointer hover:bg-[#1E90FF] 
+                      transition duration-300 shadow-md"
           onClick={() => {
             if (isLoggedIn === "Logout") {
               localStorage.removeItem("token");
@@ -73,11 +73,11 @@ const Navbar = () => {
           }}
         >
           {isLoggedIn}
-        </div>
+       
         {toggleMenu ? (
           <AiOutlineClose
             fontSize={28}
-            className="text-white md:hidden cursor-pointer"
+            className="text-white cursor-pointer absolute right-6 top-4" // Adjusted positioning
             onClick={() => {
               setToggleMenu(false);
             }}
@@ -85,12 +85,13 @@ const Navbar = () => {
         ) : (
           <HiMenuAlt4
             fontSize={28}
-            className="text-white md:hidden cursor-pointer"
+            className="text-white cursor-pointer absolute top-4" // Adjusted positioning
             onClick={() => {
               setToggleMenu(true);
             }}
           />
         )}
+      </div>
         {toggleMenu && (
           <ul
             className="z-10 fixed top-0 -right-2 p-3 w-[70vw] h-screen shadow-2xl md:hidden list-none
