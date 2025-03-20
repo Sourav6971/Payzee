@@ -26,12 +26,12 @@ router.post("/me", (req, res) => {
         verification: true,
       });
     } else {
-      res.json({
+      return res.json({
         verification: false,
       });
     }
   } catch (err) {
-    res.json({
+    return res.json({
       msg: "sign in again",
     });
   }
@@ -43,7 +43,7 @@ router.post("/signup", async (req, res) => {
   const { success } = userSchema.safeParse(req.body);
 
   if (!success) {
-    res.json({
+    return res.status(400).json({
       msg: "Enter correct format",
     });
   } else {
@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
       username,
     });
     if (response) {
-      res.status(409).json({
+      return res.status(409).json({
         msg: "User already exists",
       });
     } else {
@@ -64,7 +64,7 @@ router.post("/signup", async (req, res) => {
         password: hashedPassword,
       });
       const token = jwt.sign(username, SECRET);
-      res.json({
+      return res.json({
         token: token,
       });
     }
@@ -88,10 +88,10 @@ router.post("/signin", async (req, res) => {
       req.userId = validateUser._id.toString();
 
       const token = jwt.sign(username, SECRET);
-      res.json({ token });
+      return res.json({ token });
     }
   } else {
-    res.json({
+    return res.json({
       msg: "Invalid Credentials",
     });
   }
@@ -107,7 +107,7 @@ router.put("/update_user", authMiddleware, async (req, res) => {
     password,
   });
   if (!success)
-    res.json({
+    return res.json({
       msg: "Invalid input",
     });
 
@@ -124,11 +124,11 @@ router.put("/update_user", authMiddleware, async (req, res) => {
     }
   );
   if (updatedUser) {
-    res.json({
+    return res.json({
       updatedUser,
     });
   } else {
-    res.json({
+    return res.json({
       msg: "user not found",
     });
   }
