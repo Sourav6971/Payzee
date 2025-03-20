@@ -6,11 +6,13 @@ import axios from "axios";
 import Dashboard from "./pages/Dashboard";
 import Tutorials from "./pages/Tutorials";
 import Market from "./pages/Market";
+import Password from "./pages/Password";
+import BACKEND_URL from "./config";
 
 const App = () => {
   useEffect(() => {
     axios
-      .post("https://payzee-taupe.vercel.app/api/user/me", {
+      .post(BACKEND_URL + "user/me", {
         token: "Bearer " + localStorage.getItem("token"),
       })
       .then((res) => {
@@ -29,6 +31,7 @@ const App = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Tutorials" element={<Tutorials />} />
         <Route path="/Market" element={<Market />} />
+        <Route path="/Password" element={<Password />} />
       </Routes>
     </div>
   );

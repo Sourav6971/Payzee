@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Loader from "./Loader";
 
+import BACKEND_URL from "./../config";
+
 const SignIn = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -21,13 +23,10 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://payzee-taupe.vercel.app/api/user/signin",
-        {
-          username: inputForm.username,
-          password: inputForm.password,
-        }
-      );
+      const response = await axios.post(BACKEND_URL + "user/signin", {
+        username: inputForm.username,
+        password: inputForm.password,
+      });
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);

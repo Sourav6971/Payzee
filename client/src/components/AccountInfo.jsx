@@ -1,12 +1,34 @@
-const AccountInfo=({account})=>{
-    return <>
-    <ul className="p-4 blue-glassmorphism my-4 text-xl  w-full">
+import { LuCopy } from "react-icons/lu";
 
-    <li>{"id: "+account.id}</li>
-    <li>{"balance: "+account.balance}</li>
-    <li>{"public Key: "+account.publicKey}</li>
-    </ul>
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const AccountInfo = ({ account, index }) => {
+  const navigate = useNavigate();
+
+  const handlePrivateKey = (account) => {
+    navigate("/Password");
+  };
+  return (
+    <>
+      <div className="p-4 m-4  blue-glassmorphism sm:flex justify-between  md::flex-col">
+        <ul>
+          <li>{"Account " + Number(index + 1)}</li>
+          <li className="flex">
+            {"public Key: " + account.publicKey}
+            <LuCopy className="mt-1 mx-2 cursor-pointer" />
+          </li>
+        </ul>
+        <button
+          className=" bg-red-700 hover:bg-red-800 cursor-pointer  rounded-2xl p-2 h-max "
+          onClick={() => {
+            handlePrivateKey(account);
+          }}
+        >
+          View Private Key
+        </button>
+      </div>
     </>
-
-}
-export default AccountInfo
+  );
+};
+export default AccountInfo;
