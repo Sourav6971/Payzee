@@ -6,12 +6,15 @@ import axios from "axios";
 
 import BACKEND_URL from "./../config";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [userAccount, setUserAccount] = useState([]);
   const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/Auth");
     setLoading(true);
     axios
       .get(BACKEND_URL + "account/dashboard", {
