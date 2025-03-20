@@ -23,6 +23,8 @@ const Password = () => {
         );
         if (!response.data.msg) {
           alert("Incorrect Password!!");
+        } else {
+          alert("Password matched");
         }
       } catch (err) {
         alert("Incorrect Password!!");

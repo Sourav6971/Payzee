@@ -2,7 +2,7 @@ import { FaGithub } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-black text-white  flex justify-center items-center space-x-6 py-10">
+    <footer className="w-full bg-black text-white  flex justify-center items-center space-x-6 py-10  bottom-0 ">
       <a
         href="https://github.com/Sourav6971"
         target="_blank"

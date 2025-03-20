@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const AccountInfo = ({ account, index }) => {
   const navigate = useNavigate();
-  const [openPasswordModal, setOpenPasswordModal] = useState(false);
+
   const handlePrivateKey = (account) => {
     navigate("/Password");
   };
