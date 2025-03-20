@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axios from "axios";
+import Loader from "./Loader";
+import BACKEND_URL from "./../config";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -23,15 +26,13 @@ const SignUp = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        "https://payzee-taupe.vercel.app/api/user/signup",
-        {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          username: formData.username,
-          password: formData.password,
-        }
-      );
+      setLoading(true);
+      const response = await axios.post(BACKEND_URL + "user/signup", {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username,
+        password: formData.password,
+      });
       if (response.status === 200) {
         console.log(response.data.token);
         alert("Signup successful");
@@ -46,6 +47,8 @@ const SignUp = () => {
       } else {
         alert("Sign up failed!");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,8 +100,7 @@ const SignUp = () => {
           className="input-field"
           onChange={handleChange}
         />
-
-        <button className="submit-btn">Sign Up</button>
+        {loading ? <Loader /> : <button className="submit-btn">Sign Up</button>}
       </form>
     </div>
   );

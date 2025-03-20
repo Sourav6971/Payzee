@@ -6,6 +6,7 @@ import axios from "axios";
 import Dashboard from "./pages/Dashboard";
 import Tutorials from "./pages/Tutorials";
 import Market from "./pages/Market";
+import Password from "./pages/Password";
 
 const App = () => {
   useEffect(() => {
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Tutorials" element={<Tutorials />} />
         <Route path="/Market" element={<Market />} />
+        <Route path="/Password" element={<Password />} />
       </Routes>
     </div>
   );

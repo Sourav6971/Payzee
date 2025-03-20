@@ -1,17 +1,21 @@
 import { LuCopy } from "react-icons/lu";
 
-const AccountInfo = ({ account }) => {
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const AccountInfo = ({ account, index }) => {
+  const navigate = useNavigate();
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
   const handlePrivateKey = (account) => {
-    console.log(account.privateKey);
+    navigate("/Password");
   };
   return (
     <>
-      <div className="p-4 m-4  blue-glassmorphism flex justify-between">
+      <div className="p-4 m-4  blue-glassmorphism sm:flex justify-between  md::flex-col">
         <ul>
-          <li>{"id: " + account.id}</li>
-          <li>{"balance: " + account.balance}</li>
+          <li>{"Account " + Number(index + 1)}</li>
           <li className="flex">
-            {"public Key: " + account.publicKey}{" "}
+            {"public Key: " + account.publicKey}
             <LuCopy className="mt-1 mx-2 cursor-pointer" />
           </li>
         </ul>
