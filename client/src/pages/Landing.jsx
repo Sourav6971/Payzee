@@ -17,30 +17,33 @@ const Landing = () => {
   return (
     <div>
       <Navbar />
-      <div className="landing-page">
-        <div className="landing-box">
+      <div className="landing-page responsive-landing-page">
+        <div className="landing-box responsive-landing-box">
           {/* Info Section */}
-          <div className="info-section">
-            <div className="info-content">
+          <div className="info-section responsive-info-section">
+            <div className="info-content responsive-info-content">
               <h2>About Payzee</h2>
               <p>Payzee is a revolutionary payment platform...</p>
             </div>
           </div>
 
           {/* Auth Section */}
-          <div className="auth-section">
-            <div className="form-container">
+          <div className="auth-section responsive-auth-section">
+            <div className="form-container responsive-form-container">
               <motion.div
                 key={isSignIn ? "signIn" : "signUp"}
                 initial="hiddenLeft" // Always start from the left
                 animate="visible" // Animate to the center
                 exit="exitRight" // Always exit to the right
                 variants={variants}
-                className="auth-container"
+                className="auth-container responsive-auth-container"
               >
                 {isSignIn ? <SignIn /> : <SignUp />}
               </motion.div>
-              <p className="toggle-text" onClick={() => setIsSignIn(!isSignIn)}>
+              <p
+                className="toggle-text responsive-toggle-text"
+                onClick={() => setIsSignIn(!isSignIn)}
+              >
                 {isSignIn
                   ? "Don't have an account? Sign Up"
                   : "Already have an account? Sign In"}

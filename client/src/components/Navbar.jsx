@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState("Login");
-  const navItems = ["Home", "Dashboard", "Market", "Tutorials"];
+  const navItems = ["Home", "Dashboard", "Market", "Payments"];
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -14,9 +14,16 @@ const Navbar = () => {
   }, [isLoggedIn]);
 
   const NavbarItem = ({ title, classProps }) => {
+    const location = useLocation();
+
     return (
       <li
-        className={`m-4 cursor-pointer ${classProps} transition duration-300 hover:text-[#38BDF8]`}
+        className={`m-4 cursor-pointer ${classProps} transition duration-300 ${
+          location.pathname === `/${title}` ||
+          (location.pathname === "/" && title === "Home")
+            ? "text-[#38BDF8]"
+            : "hover:text-[#38BDF8]"
+        }`}
         onClick={() => {
           navigate(`/${title}`);
         }}

@@ -2,82 +2,176 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import {
+  FaWallet,
+  FaChartLine,
+  FaMoneyBillWave,
+  FaTachometerAlt,
+  FaUser,
+  FaQuoteLeft,
+  FaQuestionCircle,
+} from "react-icons/fa";
 
 const Home = () => {
   const navigate = useNavigate();
-  const slides = ["market", "payments", "wallet", "dashboard"];
+  const slides = [
+    { title: "Market", icon: <FaChartLine size={50} /> },
+    { title: "Payments", icon: <FaMoneyBillWave size={50} /> },
+    { title: "Wallet", icon: <FaWallet size={50} /> },
+    { title: "Dashboard", icon: <FaTachometerAlt size={50} /> },
+  ];
+
+  const reviews = [
+    {
+      name: "Alice Johnson",
+      comment: "Fastest payments I've ever used!",
+      icon: <FaUser size={40} />,
+    },
+    {
+      name: "Mark Spencer",
+      comment: "Secure and hassle-free transactions.",
+      icon: <FaUser size={40} />,
+    },
+    {
+      name: "Sophia Lee",
+      comment: "Love the smooth experience!",
+      icon: <FaUser size={40} />,
+    },
+  ];
+
+  const liveTransactions = [
+    "$250 sent to John",
+    "$130 received from Sarah",
+    "$75 payment to Netflix",
+    "$400 withdrawal to bank",
+  ];
+
+  const faqs = [
+    {
+      question: "How secure are the transactions?",
+      answer:
+        "All transactions are encrypted and secured with Solana's blockchain technology.",
+    },
+    {
+      question: "What are the transaction fees?",
+      answer:
+        "Our platform offers minimal transaction fees compared to traditional payment systems.",
+    },
+    {
+      question: "Can I use multiple wallets?",
+      answer:
+        "Yes, you can connect multiple wallets and manage them seamlessly.",
+    },
+  ];
+
   const totalSlides = slides.length;
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    }, 3000); // Change slide every 3 seconds
-
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-900 min-h-screen text-white font-urbanist overflow-hidden">
       <Navbar />
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen text-white font-urbanist">
-        <div className="flex justify-center pt-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
-            Seamless Payments, Powered by Solana
-          </h1>
-        </div>
-        <div className="flex justify-center text-center p-2">
-          <p className="mt-4 text-lg text-gray-300 max-w-xl ">
-            Experience fast, secure, and low-cost transactions like never
-            before.
-          </p>
-        </div>
-        <div className="flex justify-center p-10">
-          <button
-            className="bg-green-600 py-4 px-10 cursor-pointer hover:bg-green-700 rounded-4xl"
-            onClick={() => navigate("/Dashboard")}
-          >
-            Get Started
-          </button>
-        </div>
 
-        <div className="max-w-6xl mx-auto py-12 px-6">
-          <div className="carousel w-full">
-            {slides.map((slide, index) => (
-              <div
-                key={slide}
-                className={`carousel-item relative w-full ${
-                  currentSlide === index ? "block" : "hidden"
-                }`}
-              >
-                <div className="flex items-center justify-center h-64 bg-gray-800 text-white text-3xl font-bold">
-                  {slide}
-                </div>
-                <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                  <button
-                    onClick={() =>
-                      setCurrentSlide((prev) =>
-                        prev === 0 ? totalSlides - 1 : prev - 1
-                      )
-                    }
-                    className="btn btn-circle"
-                  >
-                    ❮
-                  </button>
-                  <button
-                    onClick={() =>
-                      setCurrentSlide((prev) => (prev + 1) % totalSlides)
-                    }
-                    className="btn btn-circle"
-                  >
-                    ❯
-                  </button>
-                </div>
-              </div>
-            ))}
+      {/* Hero Section with Animated Waves */}
+      <div className="relative flex flex-col items-center text-center pt-20 pb-32 px-6 md:px-12">
+        <h1 className="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
+          Seamless Payments, Powered by Solana
+        </h1>
+        <p className="mt-6 text-base md:text-lg text-gray-300 max-w-xl md:max-w-2xl">
+          Experience fast, secure, and low-cost transactions like never before.
+        </p>
+        <button
+          className="mt-6 bg-green-600 py-3 px-8 md:py-4 md:px-12 text-sm md:text-lg font-semibold rounded-full shadow-lg hover:bg-green-700 transition-transform duration-300 hover:scale-105"
+          onClick={() => navigate("/Dashboard")}
+        >
+          Get Started
+        </button>
+      </div>
+
+      {/* Feature Carousel */}
+      <div className="max-w-6xl mx-auto py-16 px-6 relative flex justify-center gap-6 flex-wrap">
+        {slides.map((slide, index) => (
+          <div
+            key={slide.title}
+            className={`transition-all duration-700 ease-in-out transform flex flex-col items-center justify-center w-48 h-48 md:w-64 md:h-64 rounded-3xl shadow-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white p-4 md:p-6 backdrop-blur-lg border border-white/20 hover:scale-105`}
+          >
+            {slide.icon}
+            <h3 className="mt-4 text-xl md:text-2xl font-bold">
+              {slide.title}
+            </h3>
+            <p className="text-gray-200 text-xs md:text-sm mt-2">
+              Secure & efficient transactions
+            </p>
           </div>
+        ))}
+      </div>
+
+      {/* User Reviews Section */}
+      <div className="max-w-6xl mx-auto py-24 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          What Our Users Say
+        </h2>
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-stretch flex-wrap gap-6">
+          {reviews.map((review) => (
+            <div className="w-full md:w-72 p-6 bg-gradient-to-br from-gray-800 to-gray-700 rounded-md shadow-lg text-white flex flex-col items-center">
+              <FaQuoteLeft size={30} className="text-gray-400" />
+              <p className="text-base md:text-lg mt-4">"{review.comment}"</p>
+              <div className="mt-4 flex items-center gap-2">
+                {review.icon}
+                <span>{review.name}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Live Transactions Section */}
+      <div className="max-w-6xl mx-auto py-16 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          Live Transactions
+        </h2>
+        <div className="bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg w-full max-w-sm md:max-w-md mx-auto">
+          <ul className="text-sm md:text-lg text-gray-300 space-y-4 animate-pulse">
+            {liveTransactions.map((tx, index) => (
+              <li
+                key={index}
+                className="bg-gray-700 px-3 py-2 md:px-4 md:py-2 rounded-lg"
+              >
+                {tx}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="max-w-6xl mx-auto py-16 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          Frequently Asked Questions
+        </h2>
+        <div className="space-y-6">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className="bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg text-left"
+            >
+              <div className="flex items-center text-base md:text-lg font-semibold text-green-400">
+                <FaQuestionCircle className="mr-2" /> {faq.question}
+              </div>
+              <p className="mt-2 text-sm md:text-base text-gray-300">
+                {faq.answer}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
