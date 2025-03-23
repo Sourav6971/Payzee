@@ -131,25 +131,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Live Transactions Section */}
-      <div className="max-w-6xl mx-auto py-16 px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Live Transactions
-        </h2>
-        <div className="bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg w-full max-w-sm md:max-w-md mx-auto">
-          <ul className="text-sm md:text-lg text-gray-300 space-y-4 animate-pulse">
-            {liveTransactions.map((tx, index) => (
-              <li
-                key={index}
-                className="bg-gray-700 px-3 py-2 md:px-4 md:py-2 rounded-lg"
-              >
-                {tx}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
       {/* FAQ Section */}
       <div className="max-w-6xl mx-auto py-16 px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
