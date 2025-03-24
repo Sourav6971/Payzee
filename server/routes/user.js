@@ -39,7 +39,9 @@ router.post("/me", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   let { firstName, lastName, username, password } = req.body;
-  username = username?.toLowerCase();
+  firstName = firstName.toLowerCase();
+  lastName = lastName.toLowerCase();
+  username = username.toLowerCase();
   const { success } = userSchema.safeParse(req.body);
 
   if (!success) {
@@ -148,6 +150,32 @@ router.post("/verify-password", authMiddleware, async (req, res) => {
     return res.json({
       msg: false,
     });
+  }
+});
+
+router.get("/get-users", authMiddleware, async (req, res) => {
+  let filter = req.query.filter || "";
+
+  console.log(filter);
+  try {
+    const user = await User.find({
+      $or: [
+        { firstName: { $regex: filter } },
+        { lastName: { $regex: filter } },
+      ],
+    });
+
+    if (user.length) {
+      res.json({
+        users: user,
+      });
+    } else {
+      res.json({
+        users: [],
+      });
+    }
+  } catch (err) {
+    res.json({ msg: "user not found" });
   }
 });
 
