@@ -10,6 +10,9 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("token")) navigate("/Dashboard");
+  }, []);
 
   const [inputForm, setInputForm] = useState({
     username: "",

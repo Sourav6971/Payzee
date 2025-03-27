@@ -7,7 +7,7 @@ const AccountInfo = ({ account, index }) => {
   const navigate = useNavigate();
 
   const handlePrivateKey = (account) => {
-    navigate("/Password");
+    navigate(`/password?value=private-key&id=${index}`);
   };
   return (
     <>
@@ -15,7 +15,8 @@ const AccountInfo = ({ account, index }) => {
         <ul>
           <li>{"Account " + Number(index + 1)}</li>
           <li className="flex">
-            {"public Key: " + account.publicKey}
+            {"public Key: " + account.publicKey.slice(0, 6)}...................
+            {account.publicKey.slice(-6)}
             <LuCopy className="mt-1 mx-2 cursor-pointer" />
           </li>
         </ul>
