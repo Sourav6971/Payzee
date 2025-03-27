@@ -159,9 +159,10 @@ router.get("/get-users", authMiddleware, async (req, res) => {
   console.log(filter);
   try {
     const user = await User.find({
+      username: { $ne: req.username },
       $or: [
-        { firstName: { $regex: filter } },
-        { lastName: { $regex: filter } },
+        { firstName: { $regex: filter, $options: "i" } },
+        { lastName: { $regex: filter, $options: "i" } },
       ],
     });
 
