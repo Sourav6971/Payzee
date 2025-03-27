@@ -7,7 +7,7 @@ const AccountInfo = ({ account, index }) => {
   const navigate = useNavigate();
 
   const handlePrivateKey = (account) => {
-    navigate("/Password");
+    navigate(`/password?value=private-key&id=${index}}`);
   };
   return (
     <>

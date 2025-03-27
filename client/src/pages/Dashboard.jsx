@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Navbar from "./../components/Navbar";
 import AccountInfo from "./../components/AccountInfo";
-import axios from "axios";
+import Footer from "../components/Footer";
 
 import BACKEND_URL from "./../config";
-import Footer from "../components/Footer";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [userAccount, setUserAccount] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
@@ -37,7 +38,12 @@ const Dashboard = () => {
 
       <div className="bg-gray-800 rounded-xl m-4 p-4 min-h-[100vh] ">
         <div className=" flex justify-end align-middle  ">
-          <button className=" border-none outline-none cursor-pointer bg-blue-500 hover:bg-blue-600 p-4 rounded-3xl ">
+          <button
+            className=" border-none outline-none cursor-pointer bg-blue-500 hover:bg-blue-600 p-4 rounded-3xl "
+            onClick={() => {
+              setOpenModal(true);
+            }}
+          >
             Add Account
           </button>
         </div>
