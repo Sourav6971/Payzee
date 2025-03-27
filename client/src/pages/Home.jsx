@@ -39,13 +39,6 @@ const Home = () => {
     },
   ];
 
-  const liveTransactions = [
-    "$250 sent to John",
-    "$130 received from Sarah",
-    "$75 payment to Netflix",
-    "$400 withdrawal to bank",
-  ];
-
   const faqs = [
     {
       question: "How secure are the transactions?",
@@ -100,14 +93,17 @@ const Home = () => {
           <div
             key={slide.title}
             className={`transition-all duration-700 ease-in-out transform flex flex-col items-center justify-center w-48 h-48 md:w-64 md:h-64 rounded-3xl shadow-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white p-4 md:p-6 backdrop-blur-lg border border-white/20 hover:scale-105`}
+            onClick={() => {
+              if (slide.title === "Market") navigate("/Market");
+              if (slide.title === "Wallet") navigate("/Dashboard");
+              if (slide.title === "Dashboard") navigate("/Dashboard");
+              if (slide.title === "Payments") navigate("/Payments");
+            }}
           >
             {slide.icon}
             <h3 className="mt-4 text-xl md:text-2xl font-bold">
               {slide.title}
             </h3>
-            <p className="text-gray-200 text-xs md:text-sm mt-2">
-              Secure & efficient transactions
-            </p>
           </div>
         ))}
       </div>

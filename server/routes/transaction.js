@@ -9,7 +9,7 @@ const bcrypt = require("bcryptjs");
 router.post("/transaction", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  const { fromAddress, toAddress, password, amount } = req.body;
+  const { fromAddress, toAddress, amount } = req.body;
 
   const fromAccount = await User.findOne({
     "accounts.privateKey": fromAddress,
@@ -19,15 +19,6 @@ router.post("/transaction", authMiddleware, async (req, res) => {
     await session.abortTransaction();
     return res.status(401).json({
       msg: "Account does not exist",
-    });
-  }
-
-  const correctPassword = bcrypt.compareSync(password, fromAccount.password);
-
-  if (!correctPassword) {
-    await session.abortTransaction();
-    return res.status(401).json({
-      msg: "Incorrect password",
     });
   }
 

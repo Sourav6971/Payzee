@@ -45,7 +45,9 @@ const Dashboard = () => {
           </button>
         </div>
         {loading ? (
-          <Loader />
+          <div className="mt-28">
+            <Loader />
+          </div>
         ) : (
           <>
             <div className="p-4 text-3xl font-mono font-semibold text-center sm:text-left">
