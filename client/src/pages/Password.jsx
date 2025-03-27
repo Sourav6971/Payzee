@@ -53,7 +53,7 @@ const Password = () => {
   return (
     <>
       {showPrivateKey ? (
-        <PrivateKeyModal />
+        <PrivateKeyModal id={paramsValue.get("id")} />
       ) : (
         <div className="flex justify-center absolute bg-gray-900 h-full w-full">
           <div className="white-glassmorphism mt-auto mb-auto flex flex-col p-4 h-max w-[500px] m-4 space-y-3 align-middle">

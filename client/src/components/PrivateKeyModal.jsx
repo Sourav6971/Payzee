@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAccount } from "../store/store";
 
-const PrivateKeyModal = () => {
+const PrivateKeyModal = ({ id }) => {
+  const account = useAccount((state) => state.account);
+  useEffect(() => {
+    console.log(id);
+  }, [id]);
+
   const navigate = useNavigate();
   return (
     <div className="fixed inset-0 flex justify-center items-center z-10 bg-black bg-opacity-50">
       <div className="flex flex-col justify-center items-center white-glassmorphism w-96 px-20 py-14 rounded shadow-md">
         <h2 className="text-lg font-bold mb-6 ">Your Private Key</h2>
-        <p className="mb-7 text-white break-all">{}</p>
+        <p className="mb-7 text-white break-all">{account[id].privateKey}</p>
         <button
           onClick={() => {
             navigate(-1);
