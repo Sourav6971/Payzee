@@ -16,6 +16,11 @@ const Password = () => {
     switch (searchValue) {
       case "private-key": {
         setShowPrivateKey(true);
+        break;
+      }
+      case "payment": {
+        navigate("/send-money?key=" + paramsValue.get("key"));
+        break;
       }
     }
   };
@@ -39,7 +44,6 @@ const Password = () => {
         if (!response.data.msg) {
           alert("Incorrect Password!!");
         } else {
-          alert("Password matched");
           handlePasswordConfirm();
         }
       } catch (err) {
