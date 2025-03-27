@@ -66,7 +66,7 @@ const Payments = () => {
                         )}`}</span>
                         <button
                           className="bg-green-700 px-4 py-2 rounded-lg hover:bg-green-600 w-full sm:w-auto cursor-pointer min-w-32"
-                          onClick={() => handleSend(user)}
+                          onClick={() => handleSend(account.publicKey)}
                         >
                           Send
                         </button>
