@@ -38,10 +38,9 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-
-      <div className="bg-gray-800 rounded-xl m-4 p-4 min-h-[100vh] ">
-        <div className=" flex justify-end align-middle  ">
-          <button className=" border-none outline-none cursor-pointer bg-blue-500 hover:bg-blue-600 p-4 rounded-3xl ">
+      <div className="bg-gray-800 rounded-xl m-4 p-4 min-h-[100vh]">
+        <div className="flex justify-end">
+          <button className="bg-blue-500 hover:bg-blue-600 p-4 rounded-3xl w-full sm:w-auto">
             Add Account
           </button>
         </div>
@@ -49,22 +48,27 @@ const Dashboard = () => {
           <Loader />
         ) : (
           <>
-            <div className="p-4 text-3xl font-mono font-semibold ">
+            <div className="p-4 text-3xl font-mono font-semibold text-center sm:text-left">
               Welcome{" "}
               {String(userName).charAt(0).toUpperCase() +
                 String(userName).slice(1)}
               !
             </div>
             {account.length ? (
-              <div>
-                {account.map((value, index) => {
-                  return (
-                    <AccountInfo account={value} index={index} key={value.id} />
-                  );
-                })}
+              <div className="space-y-4">
+                {account.map((value, index) => (
+                  <AccountInfo
+                    account={value}
+                    index={index}
+                    key={value.id}
+                    className="p-4 bg-[#2a2a2a] rounded-lg flex flex-col sm:flex-row sm:justify-between items-start sm:items-center"
+                  />
+                ))}
               </div>
             ) : (
-              <div className="text-center">No Accounts Created</div>
+              <div className="text-center mt-10 text-lg">
+                No Accounts Created
+              </div>
             )}
           </>
         )}
