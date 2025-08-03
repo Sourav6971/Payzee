@@ -4,16 +4,11 @@ const { User } = require("../db/index");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET = process.env.SECRET;
-const zod = require("zod");
+const { userSchema } = require("./../zod/index");
+
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const bcrypt = require("bcryptjs");
-
-const userSchema = zod.object({
-  firstName: zod.string(),
-  lastName: zod.string(),
-  username: zod.string().email(),
-  password: zod.string().min(6),
-});
+const z = require("zod");
 
 router.post("/me", (req, res) => {
   const recievedToken = req.body.token;
@@ -38,38 +33,46 @@ router.post("/me", (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
-  let { firstName, lastName, username, password } = req.body;
-  firstName = firstName.toLowerCase();
-  lastName = lastName.toLowerCase();
-  username = username.toLowerCase();
-  const { success } = userSchema.safeParse(req.body);
+  let data = req.body;
 
-  if (!success) {
+  const response = userSchema.safeParse(data);
+
+  if (!response.success) {
     return res.status(400).json({
-      msg: "Enter correct format",
+      message: "Invalid data format",
     });
-  } else {
-    const response = await User.findOne({
-      username,
-    });
-    if (response) {
-      return res.status(409).json({
-        msg: "User already exists",
-      });
-    } else {
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, salt);
-      await User.create({
-        firstName,
-        lastName,
-        username,
-        password: hashedPassword,
-      });
-      const token = jwt.sign(username, SECRET);
-      return res.json({
-        token: token,
+  }
+  try {
+    let { username, password, firstName, lastName } = response?.data;
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exist",
       });
     }
+
+    const hashedPassword = bcrypt.hashSync(password);
+    const user = await User.create({
+      username,
+      password: hashedPassword,
+      firstName,
+      lastName,
+    });
+    if (user) {
+      return res.status(201).json({
+        message: "User created successfully!",
+        user,
+      });
+    } else {
+      return res.status(500).json({
+        message: "Could not create user",
+      });
+    }
+  } catch {
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
 });
 

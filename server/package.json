@@ -10,7 +10,11 @@
     "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
+    "nodemon": "^3.1.10",
     "vercel": "^41.2.2",
-    "zod": "^3.24.2"
+    "zod": "^3.25.76"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
   }
 }
