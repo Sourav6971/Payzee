@@ -5,11 +5,11 @@ import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Dashboard from "./pages/Dashboard";
 import Payments from "./pages/Payments";
-import Market from "./pages/Market";
 import Password from "./pages/Password";
 import BACKEND_URL from "./config";
 import NotFound from "./pages/NotFoundPage"; // Import the 404 page component
 import SendMoney from "./pages/SendMoney";
+import Api from "./api";
 
 const App = () => {
   useEffect(() => {
@@ -26,17 +26,18 @@ const App = () => {
 
   return (
     <div>
-      <Routes>
-        <Route path="/Home" element={<Home />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/Auth" element={<Landing />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Payments" element={<Payments />} />
-        <Route path="/Market" element={<Market />} />
-        <Route path="/Password/*" element={<Password />} />
-        <Route path="/send-money/*" element={<SendMoney />} />
-        <Route path="*" element={<NotFound />} /> {/* 404 route */}
-      </Routes>
+      <Api>
+        <Routes>
+          <Route path="/Home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/Auth" element={<Landing />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Payments" element={<Payments />} />
+          <Route path="/Password/*" element={<Password />} />
+          <Route path="/send-money/*" element={<SendMoney />} />
+          <Route path="*" element={<NotFound />} /> {/* 404 route */}
+        </Routes>
+      </Api>
     </div>
   );
 };

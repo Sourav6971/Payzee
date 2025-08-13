@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState("Login");
-  const navItems = ["Home", "Dashboard", "Market", "Payments"];
+  const navItems = ["Home", "Dashboard", "Payments"];
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -34,9 +34,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className="w-full top-0 left-0 z-50 flex md:justify-center justify-between text-center p-4 
-                 bg-gradient-to-r from-[#141E30] to-[#243B55] shadow-md md:px-8" // Added padding for small devices
+    <div
+      className="w-full max-w-[1800px] mx-auto top-0 left-0 z-50    flex  justify-between text-center p-4
+                  md:p-10"
     >
       <div className="md:flex-[0.5] flex-col flex-initial justify-center items-center">
         <div className="flex items-center">
@@ -51,7 +51,7 @@ const Navbar = () => {
         ))}
         <li
           className="bg-[#38BDF8] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#1E90FF] 
-                     transition duration-300 shadow-md"
+                     transition duration-300 shadow-md text-black"
           onClick={() => {
             if (isLoggedIn === "Logout") {
               localStorage.removeItem("token");
@@ -120,7 +120,7 @@ const Navbar = () => {
           ))}
         </ul>
       )}
-    </nav>
+    </div>
   );
 };
 

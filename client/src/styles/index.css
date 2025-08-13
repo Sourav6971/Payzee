@@ -3,18 +3,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* Global Theme */
-:root {
-  --primary-color: #6366f1;
-  --secondary-color: #9333ea;
-  --background-dark: #0f0f0f;
-  --background-light: rgba(255, 255, 255, 0.1);
-  --text-light: #e5e7eb;
-  --text-dark: #d1d5db;
-  --border-radius: 1rem;
-  --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-}
-
 body {
   font-family: "Poppins", sans-serif;
   background: var(--background-dark);

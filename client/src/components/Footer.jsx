@@ -2,7 +2,7 @@ import { FaGithub } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-black text-white flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6 py-6 text-center">
+    <div className="w-full bg-black text-white flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6 py-6 text-center fixed bottom-0">
       <a
         href="https://github.com/Sourav6971"
         target="_blank"
@@ -24,7 +24,7 @@ const Footer = () => {
       <span className="text-sm">
         &copy; {"Copyright " + new Date().getFullYear()}
       </span>
-    </footer>
+    </div>
   );
 };
 
