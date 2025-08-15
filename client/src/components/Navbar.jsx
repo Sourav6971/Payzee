@@ -25,7 +25,8 @@ const Navbar = () => {
             : "hover:text-[#38BDF8]"
         }`}
         onClick={() => {
-          navigate(`/${title}`);
+          if (title == "Home") navigate("/");
+          else navigate(`/${title}`);
         }}
       >
         {title}

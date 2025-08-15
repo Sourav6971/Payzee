@@ -4,20 +4,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 
-import { ApiContext } from "../api/context";
-
 const Home = () => {
   const navigate = useNavigate();
-
-  const { checkFunction } = useContext(ApiContext);
-  checkFunction();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <>

@@ -10,8 +10,8 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 const bcrypt = require("bcryptjs");
 const z = require("zod");
 
-router.post("/me", (req, res) => {
-  const recievedToken = req.body.token;
+router.post("/me", authMiddleware, (req, res) => {
+  const recievedToken = req.userId;
   const jwtToken = recievedToken.split(" ")[1];
 
   try {
