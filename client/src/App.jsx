@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
-const Home = React.lazy(() => import("./pages/Home"));
 const Landing = React.lazy(() => import("./pages/Landing"));
+const Auth = React.lazy(() => import("./pages/Auth"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Payments = React.lazy(() => import("./pages/Payments"));
 const Password = React.lazy(() => import("./pages/Password"));
@@ -19,8 +19,8 @@ function App() {
       <Toaster />
       <Suspense fallback={<>Add fallback here</>}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Auth" element={<Landing />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/Auth" element={<Auth />} />
           <Route
             path="/Dashboard"
             element={

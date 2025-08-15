@@ -5,53 +5,6 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background: var(--background-dark);
-  color: var(--text-light);
-}
-
-/* Layout */
-.landing-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: var(--background-dark);
-  padding: 1.5rem;
-}
-
-/* Buttons */
-.submit-btn {
-  padding: 0.75rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  background: linear-gradient(
-    to right,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.submit-btn:hover {
-  background: linear-gradient(to right, #4f46e5, #7e22ce);
-}
-
-/* Glassmorphism Effects */
-.blue-glassmorphism,
-.white-glassmorphism {
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.blue-glassmorphism {
-  background: rgba(39, 51, 89, 0.4);
-}
-
-.white-glassmorphism {
-  background: rgba(255, 255, 255, 0.05);
+  background: #f7f9fc;
+  color: black;
 }
