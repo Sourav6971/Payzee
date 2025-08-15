@@ -1,11 +1,19 @@
-function Input({ value, onChange, placeholder, type, classProps }) {
+function Input({
+  value,
+  onChange,
+  placeholder,
+  type,
+  classProps,
+  required = false,
+}) {
   return (
     <input
-      className={`${classProps} py-2 px-3 rounded bg-slate-200 placeholder:text-slate-500`}
+      className={`${classProps} py-4 px-6 rounded bg-slate-100 placeholder:text-slate-500 placeholder:text-md`}
       value={value}
       onChange={onChange}
       placeholder={placeholder}
       type={type}
+      required={required}
     />
   );
 }

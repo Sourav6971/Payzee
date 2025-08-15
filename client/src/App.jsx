@@ -5,7 +5,6 @@ const Landing = React.lazy(() => import("./pages/Landing"));
 const Auth = React.lazy(() => import("./pages/Auth"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const Payments = React.lazy(() => import("./pages/Payments"));
-const Password = React.lazy(() => import("./pages/Password"));
 const NotFound = React.lazy(() => import("./pages/NotFoundPage"));
 const SendMoney = React.lazy(() => import("./pages/SendMoney"));
 
@@ -38,14 +37,6 @@ function App() {
             }
           />
           <Route
-            path="/Password/*"
-            element={
-              <Authenticate>
-                <Password />
-              </Authenticate>
-            }
-          />
-          <Route
             path="/send-money/*"
             element={
               <Authenticate>
@@ -53,7 +44,7 @@ function App() {
               </Authenticate>
             }
           />
-          <Route path="*" element={<NotFound />} /> 404 route
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </ApiContextProvider>

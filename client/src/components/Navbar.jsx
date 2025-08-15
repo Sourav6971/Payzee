@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState("Login");
-  const navItems = ["Home", "Dashboard", "Payments"];
+  const navItems = ["Dashboard", "Payments"];
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -18,8 +18,7 @@ const Navbar = () => {
       <li
         className="m-4 cursor-pointer  transition duration-300 text-black "
         onClick={() => {
-          if (title == "Home") navigate("/");
-          else navigate(`/${title}`);
+          navigate(`/${title}`);
         }}
       >
         {title}
@@ -28,13 +27,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full shadow ">
+    <div className="w-full shadow bg-white   ">
       <div className="w-full max-w-[1800px]  mx-auto top-0 left-0 z-50    flex  justify-between text-center p-4">
         <div className="md:flex-[0.5] flex-col flex-initial justify-center items-center">
-          <div className="flex items-center">
-            <span className="ml-3 mt-2 text-black text-3xl font-semibold">
-              Payzee!
-            </span>
+          <div className="flex flex-col justify-center">
+            <img src="logo.png" width={130} />
           </div>
         </div>
         <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">

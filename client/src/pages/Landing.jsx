@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 
-const Home = () => {
+const Landing = () => {
   const navigate = useNavigate();
 
   return (
@@ -52,4 +52,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Landing;
