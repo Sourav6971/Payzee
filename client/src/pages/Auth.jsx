@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { FaEyeSlash } from "react-icons/fa";
 import { Input } from "../components/ui/Index";
 import { AiFillEye } from "react-icons/ai";
-import { UserContext } from "../user/context";
-import { ApiContext } from "../api/context";
+import { UserContext } from "../context/user/context";
+import { ApiContext } from "../context/api/context";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [authType, setAuthType] = useState("signin");
@@ -17,8 +18,15 @@ const Auth = () => {
   });
   const [toggleView, setToggleView] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
   const { makeApiRequest } = useContext(ApiContext);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/Dashboard");
+  }, [loading]);
 
   const handleSignin = async () => {
     setLoading(true);
@@ -28,11 +36,13 @@ const Auth = () => {
       data: formData,
     };
     const response = await makeApiRequest(config);
-    if (response.status(200)) {
-      setUser(response?.data?.user);
-      localStorage.setItem(response?.data?.token);
+    if (!response?.success) {
       setLoading(false);
+      return;
     }
+    setUser(response?.user);
+    localStorage.setItem("token", response?.token);
+    setLoading(false);
   };
 
   const handleSignup = async () => {
@@ -40,6 +50,7 @@ const Auth = () => {
     const { password, confirmPassword } = formData;
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
+      setLoading(false);
       return;
     }
     const config = {
@@ -48,9 +59,13 @@ const Auth = () => {
       data: formData,
     };
     const response = await makeApiRequest(config);
-    console.log(response);
-    // if (response.status == 200) setUser(response.data.user);
-    // localStorage.setItem("token", response.data.token);
+    if (!response?.success) {
+      setLoading(false);
+      return;
+    }
+    setUser(response?.user);
+    localStorage.setItem("token", response?.token);
+    setLoading(false);
   };
 
   return (

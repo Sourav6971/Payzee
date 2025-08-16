@@ -9,9 +9,9 @@ const NotFound = React.lazy(() => import("./pages/NotFoundPage"));
 const SendMoney = React.lazy(() => import("./pages/SendMoney"));
 
 import Authenticate from "./utils/authenticate";
-import ApiContextProvider from "./api";
+import ApiContextProvider from "./context/api";
 import { Toaster } from "react-hot-toast";
-import UserContextProvider from "./user";
+import UserContextProvider from "./context/user";
 
 function App() {
   return (
@@ -46,7 +46,7 @@ function App() {
                 </Authenticate>
               }
             />
-            <Route path="*" element={<NotFound />} />
+            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </Suspense>
       </UserContextProvider>

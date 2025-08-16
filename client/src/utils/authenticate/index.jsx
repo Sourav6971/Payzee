@@ -9,18 +9,16 @@ export default function Authenticate({ children }) {
   const session = localStorage.getItem("token");
   useEffect(() => {
     if (!session) {
-      toast.error("Signin first");
       navigate("/Auth");
       setIsAuthenticated(false);
       return;
     }
-  }, [session, isAuthenticated]);
-
-  useCallback(async () => {
-    setIsAuthenticated(false);
-    return false;
+    if (session) {
+      setIsAuthenticated(true);
+    }
   }, [session, isAuthenticated]);
 
   if (!isAuthenticated) return;
+
   return <>{children}</>;
 }
