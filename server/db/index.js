@@ -13,12 +13,6 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   accounts: [{ privateKey: String, publicKey: String }],
 });
-//for future property listings in market
-// const PropertySchema = new mongoose.Schema({
-//   userId: { type: mongoose.Schema.Types.ObjectId },
-//   imgUrl: { type: String },
-//   price: { type: Number },
-// });
 
 const User = mongoose.model("User", UserSchema);
 

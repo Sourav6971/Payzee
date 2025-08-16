@@ -1,58 +1,54 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import SignIn from "../components/SignIn";
-import SignUp from "../components/SignUp";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import "../styles/landing.css";
+import Footer from "../components/Footer";
+import { motion } from "framer-motion";
 
 const Landing = () => {
-  const [isSignIn, setIsSignIn] = useState(true);
-
-  const variants = {
-    hiddenLeft: { x: "-100%", opacity: 0 }, // Start from the left
-    visible: { x: "0%", opacity: 1, transition: { duration: 0.7 } }, // Slide to center
-    exitRight: { x: "100%", opacity: 0, transition: { duration: 0.7 } }, // Exit to the right
-  };
+  const navigate = useNavigate();
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="landing-page responsive-landing-page">
-        <div className="landing-box responsive-landing-box">
-          {/* Info Section */}
-          <div className="info-section responsive-info-section">
-            <div className="info-content responsive-info-content">
-              <h2>About Payzee</h2>
-              <p>Payzee is a revolutionary payment platform...</p>
-            </div>
-          </div>
+      <div className="min-h-screen font-urbanist overflow-hidden p-4">
+        {/* Hero Section with Animated Text */}
+        <motion.div
+          className="relative flex flex-col items-center text-center my-48 px-6 md:px-12 min-w-7xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          <motion.h1
+            className="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            Seamless Payments, Powered by Solana
+          </motion.h1>
 
-          {/* Auth Section */}
-          <div className="auth-section responsive-auth-section">
-            <div className="form-container responsive-form-container">
-              <motion.div
-                key={isSignIn ? "signIn" : "signUp"}
-                initial="hiddenLeft" // Always start from the left
-                animate="visible" // Animate to the center
-                exit="exitRight" // Always exit to the right
-                variants={variants}
-                className="auth-container responsive-auth-container"
-              >
-                {isSignIn ? <SignIn /> : <SignUp />}
-              </motion.div>
-              <p
-                className="toggle-text responsive-toggle-text"
-                onClick={() => setIsSignIn(!isSignIn)}
-              >
-                {isSignIn
-                  ? "Don't have an account? Sign Up"
-                  : "Already have an account? Sign In"}
-              </p>
-            </div>
-          </div>
-        </div>
+          <motion.p
+            className="mt-6 text-base md:text-lg  max-w-xl md:max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.4 }}
+          >
+            Experience fast, secure, and low-cost transactions like never
+            before.
+          </motion.p>
+
+          <motion.button
+            className="mt-6 bg-blue-500 py-3 px-8 md:py-4 md:px-12 text-sm md:text-lg font-semibold rounded-full shadow-lg hover:bg-blue-600 transition-transform duration-300 hover:scale-105 cursor-pointer text-white"
+            onClick={() => navigate("/Auth")}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            Get Started
+          </motion.button>
+        </motion.div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
