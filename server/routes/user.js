@@ -9,6 +9,9 @@ const { userSchema } = require("./../zod/index");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const bcrypt = require("bcryptjs");
 const z = require("zod");
+const { findUser, createUser } = require("../db/database");
+
+JWT_SECRET = process.env.JWT_SECRET;
 
 router.post("/me", authMiddleware, (req, res) => {
   const recievedToken = req.userId;
@@ -40,40 +43,39 @@ router.post("/signup", async (req, res) => {
   if (!response.success) {
     return res.status(400).json({
       message: "Invalid data format",
+      success: false,
     });
   }
-  try {
-    let { username, password, firstName, lastName } = response?.data;
+  // try {
+  let { email, password } = response?.data;
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User already exist",
-      });
-    }
-
-    const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-      firstName,
-      lastName,
+  const existingUser = await findUser(email);
+  if (existingUser)
+    return res.json({
+      message: "User already exists",
+      success: false,
     });
-    if (user) {
-      return res.status(201).json({
-        message: "User created successfully!",
-        user,
-      });
-    } else {
-      return res.status(500).json({
-        message: "Could not create user",
-      });
-    }
-  } catch {
-    res.status(500).json({
-      message: "Internal server error",
+
+  const user = await createUser(email, password);
+  if (user) {
+    const token = await jwt.sign({ userId: user._id }, JWT_SECRET);
+
+    return res.json({
+      message: "User created successfully",
+      success: true,
+      user,
+      token,
+    });
+  } else {
+    return res.status(500).json({
+      message: "Could not create user",
     });
   }
+  // } catch {
+  //   res.status(500).json({
+  //     message: "Internal server error",
+  //   });
+  // }
 });
 
 router.post("/signin", async (req, res) => {
