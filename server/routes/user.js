@@ -40,66 +40,72 @@ router.post("/signup", async (req, res) => {
 
   const response = userSchema.safeParse(data);
 
-  if (!response.success) {
+  if (!response?.success) {
     return res.status(400).json({
       message: "Invalid data format",
       success: false,
     });
   }
-  // try {
-  let { email, password } = response?.data;
+  try {
+    let { email, password } = response?.data;
 
-  const existingUser = await findUser(email);
-  if (existingUser)
-    return res.json({
-      message: "User already exists",
-      success: false,
-    });
+    const existingUser = await findUser(email);
+    if (existingUser)
+      return res.json({
+        message: "User already exists",
+        success: false,
+      });
 
-  const user = await createUser(email, password);
-  if (user) {
-    const token = await jwt.sign({ userId: user._id }, JWT_SECRET);
+    const user = await createUser(email, password);
+    if (user) {
+      const token = await jwt.sign({ userId: user._id }, JWT_SECRET);
 
-    return res.json({
-      message: "User created successfully",
-      success: true,
-      user,
-      token,
-    });
-  } else {
-    return res.status(500).json({
-      message: "Could not create user",
+      return res.json({
+        message: "User created successfully",
+        success: true,
+        user,
+        token,
+      });
+    } else {
+      return res.status(500).json({
+        message: "Could not create user",
+      });
+    }
+  } catch {
+    res.status(500).json({
+      message: "Internal server error",
     });
   }
-  // } catch {
-  //   res.status(500).json({
-  //     message: "Internal server error",
-  //   });
-  // }
 });
 
 router.post("/signin", async (req, res) => {
-  let { username, password } = req.body;
-  username = username?.toLowerCase();
+  let { email, password } = req.body;
 
-  const validateUser = await User.findOne({
-    username,
-  });
-  if (validateUser) {
-    const validatePassword = bcrypt.compareSync(
-      password,
-      validateUser.password
-    );
+  try {
+    const validateUser = await findUser(email);
+    if (validateUser) {
+      const validatePassword = bcrypt.compareSync(
+        password,
+        validateUser?.password
+      );
 
-    if (validatePassword) {
-      req.userId = validateUser._id.toString();
-
-      const token = jwt.sign(username, SECRET);
-      return res.json({ token });
+      if (validatePassword) {
+        const token = jwt.sign({ userId: validateUser?._id }, JWT_SECRET);
+        return res.json({
+          success: true,
+          message: "Signin successfull",
+          user: validateUser,
+          token,
+        });
+      }
+    } else {
+      return res.status(401).json({
+        message: "Invalid credentials",
+      });
     }
-  } else {
-    return res.json({
-      msg: "Invalid Credentials",
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
   }
 });
