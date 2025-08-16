@@ -1,18 +1,58 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 import { FaEyeSlash } from "react-icons/fa";
-import Navbar from "../components/Navbar";
 import { Input } from "../components/ui/Index";
 import { AiFillEye } from "react-icons/ai";
+import { UserContext } from "../user/context";
+import { ApiContext } from "../api/context";
 
 const Auth = () => {
   const [authType, setAuthType] = useState("signin");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [toggleView, setToggleView] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { setUser } = useContext(UserContext);
+  const { makeApiRequest } = useContext(ApiContext);
+
+  const handleSignin = async () => {
+    setLoading(true);
+    const config = {
+      method: "POST",
+      url: "api/user/signin",
+      data: formData,
+    };
+    const response = await makeApiRequest(config);
+    if (response.status(200)) {
+      setUser(response?.data?.user);
+      localStorage.setItem(response?.data?.token);
+      setLoading(false);
+    }
+  };
+
+  const handleSignup = async () => {
+    setLoading(true);
+    const { password, confirmPassword } = formData;
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    const config = {
+      method: "POST",
+      url: "api/user/signup",
+      data: formData,
+    };
+    const response = await makeApiRequest(config);
+    console.log(response);
+    // if (response.status == 200) setUser(response.data.user);
+    // localStorage.setItem("token", response.data.token);
+  };
+
   return (
     <>
       <div className="min-h-screen flex justify-center  ">
@@ -32,7 +72,7 @@ const Auth = () => {
                 type={toggleView ? "text" : "password"}
                 placeholder={"Password"}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  setFormData((prev) => ({ ...prev, password: e.target.value }))
                 }
                 required={true}
               />
@@ -42,7 +82,10 @@ const Auth = () => {
               >
                 {toggleView ? <AiFillEye /> : <FaEyeSlash />}
               </div>
-              <button className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl ">
+              <button
+                className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl "
+                onClick={handleSignin}
+              >
                 Signin
               </button>
               <span className="flex justify-center text-sm text-slate-700 cursor-pointer">
@@ -70,15 +113,18 @@ const Auth = () => {
                 type={"password"}
                 placeholder={"Password"}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  setFormData((prev) => ({ ...prev, password: e.target.value }))
                 }
                 required={true}
-              />{" "}
+              />
               <Input
                 type={toggleView ? "text" : "password"}
                 placeholder={"Confirm password"}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    confirmPassword: e.target.value,
+                  }))
                 }
                 required={true}
               />
@@ -88,7 +134,10 @@ const Auth = () => {
               >
                 {toggleView ? <AiFillEye /> : <FaEyeSlash />}
               </div>
-              <button className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl ">
+              <button
+                className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl "
+                onClick={handleSignup}
+              >
                 Signup
               </button>
               <span className="flex justify-center text-sm text-slate-700 cursor-pointer">

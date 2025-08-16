@@ -2,23 +2,30 @@ import { useCallback } from "react";
 import { ApiContext } from "./context";
 import axios from "axios";
 import toast from "react-hot-toast";
+// import "dotenv/config";
 
 export default function ApiContextProvider({ children }) {
-  const makeApiRequest = useCallback(async (method, data, params, url) => {
+  const makeApiRequest = useCallback(async ({ method, data, params, url }) => {
+    console.log(import.meta.env.VITE_PAYZEE_API_URL);
     try {
       const response = await axios({
         method,
-        url: `${process.env.PAYZEE_API_URL}/${url}`,
+        url: `${import.meta.env.VITE_PAYZEE_API_URL}/${url}`,
         data,
         params,
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (response.status == 200) toast.success("signed in");
-      else toast.error("Error not sign in");
-    } catch {}
-    //make api call here
+      console.log(response.data);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        return response.data;
+      } else toast.error(response.data.message);
+    } catch (error) {
+      console.log("Yaha hai error", error);
+      toast.error(error.response.data.message);
+    }
   });
 
   const authenticatedApiRequest = useCallback(
@@ -33,7 +40,7 @@ export default function ApiContextProvider({ children }) {
           data,
           method,
           params,
-          url: `${process.env.PAYZEE_API_URL}/${url}`,
+          url: `${import.meta.env.VITE_PAYZEE_API_URL}/${url}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: token,

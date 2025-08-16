@@ -11,42 +11,45 @@ const SendMoney = React.lazy(() => import("./pages/SendMoney"));
 import Authenticate from "./utils/authenticate";
 import ApiContextProvider from "./api";
 import { Toaster } from "react-hot-toast";
+import UserContextProvider from "./user";
 
 function App() {
   return (
     <ApiContextProvider>
-      <Toaster />
-      <Suspense fallback={<>Add fallback here</>}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/Auth" element={<Auth />} />
-          <Route
-            path="/Dashboard"
-            element={
-              <Authenticate>
-                <Dashboard />
-              </Authenticate>
-            }
-          />
-          <Route
-            path="/Payments"
-            element={
-              <Authenticate>
-                <Payments />
-              </Authenticate>
-            }
-          />
-          <Route
-            path="/send-money/*"
-            element={
-              <Authenticate>
-                <SendMoney />
-              </Authenticate>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <UserContextProvider>
+        <Toaster />
+        <Suspense fallback={<>Add fallback here</>}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/Auth" element={<Auth />} />
+            <Route
+              path="/Dashboard"
+              element={
+                <Authenticate>
+                  <Dashboard />
+                </Authenticate>
+              }
+            />
+            <Route
+              path="/Payments"
+              element={
+                <Authenticate>
+                  <Payments />
+                </Authenticate>
+              }
+            />
+            <Route
+              path="/send-money/*"
+              element={
+                <Authenticate>
+                  <SendMoney />
+                </Authenticate>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </UserContextProvider>
     </ApiContextProvider>
   );
 }
