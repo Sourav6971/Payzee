@@ -12,13 +12,14 @@ import Authenticate from "./utils/authenticate";
 import ApiContextProvider from "./context/api";
 import { Toaster } from "react-hot-toast";
 import UserContextProvider from "./context/user";
+import Falllback from "./components/Fallback";
 
 function App() {
   return (
     <ApiContextProvider>
       <UserContextProvider>
         <Toaster />
-        <Suspense fallback={<>Add fallback here</>}>
+        <Suspense fallback={<Falllback />}>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/Auth" element={<Auth />} />
@@ -46,7 +47,7 @@ function App() {
                 </Authenticate>
               }
             />
-            {/* <Route path="*" element={<NotFound />} /> */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </UserContextProvider>
