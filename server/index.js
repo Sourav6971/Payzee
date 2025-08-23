@@ -1,10 +1,7 @@
 const express = require("express");
 const app = express();
-const userRoute = require("./routes/user");
-const accountRoute = require("./routes/account");
-const transactionRoute = require("./routes/transaction");
 
-const PORT = 8000;
+const PORT = process.env.PORT ?? 3000;
 const bodyParser = require("body-parser");
 const cors = require("cors");
 app.use(cors());
@@ -15,9 +12,9 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/user", userRoute);
-app.use("/api/account", accountRoute);
-app.use("/api", transactionRoute);
+app.use("/api/user", require("./routes/user"));
+app.use("/api/account", require("./routes/account"));
+app.use("/api", require("./routes/transaction"));
 
 app.listen(PORT, () => {
   console.log(`app listening on ${PORT}`);
