@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
+import { UserContext } from "../context/user/context";
 
+const navItems = ["Dashboard", "Payments"];
 const Navbar = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState("Login");
-	const navItems = ["Dashboard", "Payments"];
-	const navigate = useNavigate();
 	const [toggleMenu, setToggleMenu] = useState(false);
+	const { user } = useContext(UserContext);
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (localStorage.getItem("token")) {
+		if (user?.publicKey) {
 			setIsLoggedIn("Logout");
 			navigate("/dashboard");
 		}

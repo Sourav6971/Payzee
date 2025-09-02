@@ -15,6 +15,7 @@ import Fallback from "./components/Fallback";
 
 const ROUTES = [
 	{ path: "/", element: <Landing />, authenticated: false },
+	{ path: "/home", element: <Landing />, authenticated: false },
 	{
 		path: "/auth",
 		element: <Auth />,
