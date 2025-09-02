@@ -4,7 +4,7 @@ import Fallback from "../../components/Fallback";
 import NotFound from "../404";
 import { FaArrowLeft } from "react-icons/fa6";
 import SideBar from "../../components/SideBar";
-import Wallet from "../../utils/wallet";
+import Wallet from "../../utils/walletWrapper";
 import Footer from "../../components/Footer";
 const Buy = React.lazy(() => import("./Buy"));
 const Send = React.lazy(() => import("./Send"));

@@ -15,17 +15,14 @@ export default function Send() {
 					type="text"
 					required={true}
 				/>
-				<div className=" flex w-[90%] rounded ">
-					<Input
-						placeholder="Amount"
-						type="number"
-						onChange={(e) => setAmount(e.target.value)}
-						required={true}
-					/>
-					<span className="flex  flex-col justify-center text-xl pl-4 ">
-						Sol
-					</span>
-				</div>
+
+				<Input
+					placeholder="Amount in SOL"
+					type="number"
+					onChange={(e) => setAmount(e.target.value)}
+					required={true}
+				/>
+
 				<button
 					className="mt-10 bg-blue-700 text-white py-3 rounded hover:bg-blue-800 cursor-pointer"
 					onClick={() => {

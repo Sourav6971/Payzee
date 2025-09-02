@@ -4,24 +4,17 @@ import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 import { UserContext } from "../context/user/context";
 
-const navItems = ["Dashboard", "Payments"];
+const navItems = ["Docs"];
 const Navbar = () => {
-	const [isLoggedIn, setIsLoggedIn] = useState("Login");
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const { user } = useContext(UserContext);
+	const session = localStorage.getItem("token");
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		if (user?.publicKey) {
-			setIsLoggedIn("Logout");
-			navigate("/dashboard");
-		}
-	}, [isLoggedIn]);
 
 	const NavbarItem = ({ title }) => {
 		return (
 			<li
-				className="m-4 cursor-pointer  transition duration-300 text-black "
+				className="m-4 cursor-pointer  transition duration-300 text-black hover:underline underline-offset-4"
 				onClick={() => {
 					navigate(`/${title}`);
 				}}
@@ -39,24 +32,22 @@ const Navbar = () => {
 						<img src="logo.png" width={130} />
 					</div>
 				</div>
-				<ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">
+				<ul className="text-white md:flex hidden list-none flex-row justify-between items-center  flex-initial">
 					{navItems.map((item, index) => (
 						<NavbarItem key={item + index} title={item} />
 					))}
 					<li
-						className="bg-[#38BDF8] py-2 px-7 mx-4 rounded-full cursor-pointer hover:bg-[#1E90FF] 
-                     transition duration-300 shadow-md text-black"
+						className="bg-blue-700 py-3 px-7 mx-4 rounded-full cursor-pointer hover:bg-blue-800 
+                     transition duration-300 shadow-md text-white"
 						onClick={() => {
-							if (isLoggedIn === "Logout") {
-								localStorage.removeItem("token");
-								setIsLoggedIn("Login");
+							if (session) {
 								navigate("/dashboard");
 							} else {
 								navigate("/auth");
 							}
 						}}
 					>
-						{isLoggedIn}
+						{session ? "Dashboard" : "Login"}
 					</li>
 				</ul>
 				<div className="flex relative md:hidden items-center">
@@ -64,16 +55,14 @@ const Navbar = () => {
 						className="bg-[#38BDF8] py-2 px-7 rounded-full cursor-pointer hover:bg-[#1E90FF] 
                       transition duration-300 shadow-md"
 						onClick={() => {
-							if (isLoggedIn === "Logout") {
-								localStorage.removeItem("token");
-								setIsLoggedIn("Login");
+							if (session) {
 								navigate("/dashboard");
 							} else {
 								navigate("/auth");
 							}
 						}}
 					>
-						{isLoggedIn}
+						{session ? "Dashboard" : "Login"}
 					</div>
 					{toggleMenu ? (
 						<AiOutlineClose

@@ -2,6 +2,7 @@ import { useContext, useRef } from "react";
 import { UserContext } from "../../context/user/context";
 import QRCode from "react-qr-code";
 import * as htmlToImage from "html-to-image";
+import { LuDownload } from "react-icons/lu";
 export default function Receive() {
 	const { wallet } = useContext(UserContext);
 	const qrRef = useRef(null);
@@ -23,9 +24,8 @@ export default function Receive() {
 	};
 
 	return (
-		<div className="flex justify-center items-center h-full">
-			<div className="flex flex-col justify-center items-center gap-6">
-				{/* ⚠️ Avoid Tailwind inside here to prevent oklch errors */}
+		<div className="flex justify-center  h-full">
+			<div className="flex flex-col justify-center items-center  gap-6">
 				<div
 					ref={qrRef}
 					style={{
@@ -37,12 +37,16 @@ export default function Receive() {
 				>
 					{wallet && <QRCode value={wallet} size={400} />}
 				</div>
-
 				<button
 					onClick={handleDownload}
-					className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+					className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer text-xl"
 				>
-					Download
+					<span className="flex gap-4">
+						Download QR
+						<span className="flex flex-col justify-center">
+							<LuDownload />
+						</span>
+					</span>
 				</button>
 			</div>
 		</div>
