@@ -4,6 +4,8 @@ import Fallback from "../../components/Fallback";
 import NotFound from "../404";
 import { FaArrowLeft } from "react-icons/fa6";
 import SideBar from "../../components/SideBar";
+import Wallet from "../../utils/wallet";
+import Footer from "../../components/Footer";
 const Buy = React.lazy(() => import("./Buy"));
 const Send = React.lazy(() => import("./Send"));
 const Swap = React.lazy(() => import("./Swap"));
@@ -28,15 +30,17 @@ export default function Index() {
 					<SideBarNav />
 					<div className="flex -mt-2 ">
 						<SideBar />
-
-						<div className=" max-w-[1200px]">
-							<Component />
-						</div>
+						<Wallet>
+							<div className=" max-w-[1200px] mx-auto">
+								<Component />
+							</div>
+						</Wallet>
 					</div>
 				</div>
 			) : (
 				<NotFound />
 			)}
+			<Footer />
 		</Suspense>
 	);
 }
