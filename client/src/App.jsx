@@ -4,55 +4,66 @@ import { Routes, Route } from "react-router-dom";
 const Landing = React.lazy(() => import("./pages/Landing"));
 const Auth = React.lazy(() => import("./pages/Auth"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
-const Payments = React.lazy(() => import("./pages/Payments"));
-const NotFound = React.lazy(() => import("./pages/NotFoundPage"));
-const SendMoney = React.lazy(() => import("./pages/SendMoney"));
+const NotFound = React.lazy(() => import("./pages/404"));
+const SideMenu = React.lazy(() => import("./pages/SideBar/Index"));
 
 import Authenticate from "./utils/authenticate";
 import ApiContextProvider from "./context/api";
 import { Toaster } from "react-hot-toast";
 import UserContextProvider from "./context/user";
-import Falllback from "./components/Fallback";
+import Fallback from "./components/Fallback";
+
+const ROUTES = [
+	{ path: "/", element: <Landing />, authenticated: false },
+	{ path: "/home", element: <Landing />, authenticated: false },
+	{
+		path: "/auth",
+		element: <Auth />,
+		authenticated: false,
+	},
+	{
+		path: "/dashboard",
+		element: <Dashboard />,
+		authenticated: true,
+	},
+	{
+		path: "/dashboard/options",
+		element: <SideMenu />,
+		authenticated: true,
+	},
+
+	{
+		path: "/*",
+		element: <NotFound />,
+		authenticated: false,
+	},
+];
 
 function App() {
-  return (
-    <ApiContextProvider>
-      <UserContextProvider>
-        <Toaster />
-        <Suspense fallback={<Falllback />}>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/Auth" element={<Auth />} />
-            <Route
-              path="/Dashboard"
-              element={
-                <Authenticate>
-                  <Dashboard />
-                </Authenticate>
-              }
-            />
-            <Route
-              path="/Payments"
-              element={
-                <Authenticate>
-                  <Payments />
-                </Authenticate>
-              }
-            />
-            <Route
-              path="/send-money/*"
-              element={
-                <Authenticate>
-                  <SendMoney />
-                </Authenticate>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </UserContextProvider>
-    </ApiContextProvider>
-  );
+	return (
+		<ApiContextProvider>
+			<UserContextProvider>
+				<Toaster />
+				<Suspense fallback={<Fallback />}>
+					<Routes>
+						{ROUTES.map(({ path, element, authenticated }) => (
+							<Route
+								key={path}
+								path={path}
+								element={
+									authenticated ? (
+										<Authenticate>{element}</Authenticate>
+									) : (
+										element
+									)
+								}
+							/>
+						))}
+					</Routes>
+				</Suspense>
+			</UserContextProvider>
+		</ApiContextProvider>
+	);
 }
 
 export default App;
