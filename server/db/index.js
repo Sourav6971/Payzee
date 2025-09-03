@@ -4,10 +4,11 @@ require("dotenv").config();
 const MAX_RETRIES = 6;
 let CURRENT_COUNT = 0;
 
-async function connectDb() {
+(async function connectDb() {
 	while (CURRENT_COUNT < MAX_RETRIES) {
 		try {
 			await mongoose.connect(process.env.MONGODB_URL, {
+				timeoutMS: 10000,
 				serverSelectionTimeoutMS: 10000,
 			});
 			console.log("DB connected");
@@ -20,15 +21,13 @@ async function connectDb() {
 		}
 	}
 	console.log("Could not connect to DB after max retries");
-}
+})();
 
-const UserSchema = new mongoose.Schema({
-	email: { type: String, required: true },
-	password: { type: String, required: true },
+const MerchantSchema = new mongoose.Schema({
+	email: string,
+	password: string,
+	source: string,
 });
-
-connectDb();
-
 const User = mongoose.model("User", UserSchema);
 
 module.exports = { User };

@@ -35,17 +35,17 @@ export default function UserContextProvider({ children }) {
 	}, [connected]);
 
 	const paySol = useCallback(
-		async (amount, toAddress) => {
+		async (amount, toAddress, fromAddress = wallet) => {
 			try {
 				const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 				const transaction = new Transaction().add(
 					SystemProgram.transfer({
-						fromPubkey: new PublicKey(wallet),
+						fromPubkey: new PublicKey(fromAddress),
 						toPubkey: new PublicKey(toAddress),
 						lamports: amount * LAMPORTS_PER_SOL,
 					})
 				);
-				transaction.feePayer = new PublicKey(wallet);
+				transaction.feePayer = new PublicKey(fromAddress);
 
 				transaction.recentBlockhash = (
 					await connection.getRecentBlockhash()

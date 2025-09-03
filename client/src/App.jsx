@@ -7,6 +7,7 @@ const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const NotFound = React.lazy(() => import("./pages/404"));
 const Docs = React.lazy(() => import("./pages/Docs"));
 const SideMenu = React.lazy(() => import("./pages/SideBar/Index"));
+const Transfer = React.lazy(() => import("./components/Transfer"));
 
 import Authenticate from "./utils/authenticateWrapper";
 import ApiContextProvider from "./context/api";
@@ -35,6 +36,11 @@ const ROUTES = [
 	{
 		path: "/docs",
 		element: <Docs />,
+		authenticated: false,
+	},
+	{
+		path: "/transfer",
+		element: <Transfer />,
 		authenticated: false,
 	},
 
