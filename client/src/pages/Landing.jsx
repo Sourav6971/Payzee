@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 
@@ -8,7 +8,7 @@ const Landing = () => {
 
 	return (
 		<>
-			<Navbar />
+			<Nav />
 			<div className="min-h-screen font-urbanist overflow-hidden p-4">
 				{/* Hero Section with Animated Text */}
 				<motion.div

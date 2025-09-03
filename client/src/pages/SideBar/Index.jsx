@@ -55,7 +55,7 @@ function SideBarNav() {
 			<div className="flex flex-col justify-center mr-2">
 				<FaArrowLeft />
 			</div>
-			<span className="hover:underline underline-offset-4">Back</span>
+			<span className="hover:underline underline-offset-4">Dashboard</span>
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Input } from "../../components/ui/Index";
+import Input from "../../components/ui/Input";
 import { UserContext } from "../../context/user/context";
 
 export default function Send() {

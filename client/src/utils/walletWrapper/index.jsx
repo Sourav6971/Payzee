@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function Wallet({ children }) {
-	const { connected, connectWallet } = useContext(UserContext);
+	const { connected, loading, connectWallet } = useContext(UserContext);
 	const navigate = useNavigate();
 	useEffect(() => {
-		if (!connected) {
-			connectWallet();
+		if (!connected || loading) {
 			navigate("/dashboard");
+			toast.error("Please connect wallet!");
 		}
-	}, []);
-	return children;
+	}, [connected, loading]);
+
+	return connected ? children : null;
 }

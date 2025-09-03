@@ -1,4 +1,4 @@
-function Input({
+export default function Input({
 	value,
 	onChange,
 	placeholder,
@@ -17,5 +17,3 @@ function Input({
 		/>
 	);
 }
-
-export { Input };

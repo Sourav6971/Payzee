@@ -16,7 +16,6 @@ const Auth = () => {
 		password: "",
 		confirmPassword: "",
 	});
-	const [toggleView, setToggleView] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	const navigate = useNavigate();
@@ -32,7 +31,7 @@ const Auth = () => {
 		setLoading(true);
 		const config = {
 			method: "POST",
-			url: "api/user/signin",
+			url: "api/v1/user/signin",
 			data: formData,
 		};
 		const response = await makeApiRequest(config);
