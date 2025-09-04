@@ -13,6 +13,11 @@ const SIDE_BAR_ITEMS = [
 		tab: "send",
 	},
 	{
+		title: "Receive",
+		icon: <IoQrCode color="#0047AB" size={30} />,
+		tab: "receive",
+	},
+	{
 		title: "Swap",
 		icon: <IoMdSwap color="#0047AB" size={30} />,
 		tab: "swap",
@@ -21,11 +26,6 @@ const SIDE_BAR_ITEMS = [
 		title: "Buy",
 		icon: <FaCircleDollarToSlot color="#0047AB" size={30} />,
 		tab: "buy",
-	},
-	{
-		title: "Receive",
-		icon: <IoQrCode color="#0047AB" size={30} />,
-		tab: "receive",
 	},
 ];
 

@@ -1,193 +1,156 @@
-const Router = require("express");
-const router = Router();
-const { User } = require("../db/index");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const SECRET = process.env.SECRET;
-const { userSchema } = require("./../zod/index");
-
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const { Router } = require("express");
+const { createMerchant, createProject } = require("../utils/database");
+const { generateAPI } = require("../scripts/db");
 const bcrypt = require("bcryptjs");
-const z = require("zod");
-const { findUser, createUser } = require("../db/database");
+const { PrismaClient } = require("@prisma/client");
 
-JWT_SECRET = process.env.JWT_SECRET;
+const router = Router();
+const prisma = new PrismaClient();
 
-router.post("/me", authMiddleware, (req, res) => {
-	const receivedToken = req.userId;
-	const jwtToken = receivedToken.split(" ")[1];
-
-	try {
-		const response = jwt.verify(jwtToken, SECRET);
-		if (response) {
-			res.status(200).json({
-				verification: true,
-			});
-		} else {
-			return res.json({
-				verification: false,
-			});
-		}
-	} catch (err) {
-		return res.json({
-			msg: "sign in again",
-		});
-	}
-});
-
+// Merchant signup
 router.post("/signup", async (req, res) => {
-	let data = req.body;
-
-	const response = userSchema.safeParse(data);
-
-	if (!response?.success) {
-		return res.status(400).json({
-			message: "Invalid data format",
-			success: false,
-		});
-	}
 	try {
-		let { email, password } = response?.data;
+		const { firstName, lastName, email, password, publicKey } = req.body;
 
-		const existingUser = await findUser(email);
-		if (existingUser)
-			return res.json({
-				message: "User already exists",
-				success: false,
-			});
+		// Check if merchant already exists
+		const existingMerchant = await prisma.merchant.findUnique({
+			where: { email },
+		});
 
-		const user = await createUser(email, password);
-		if (user) {
-			const token = await jwt.sign({ userId: user._id }, JWT_SECRET);
-
-			return res.json({
-				message: "User created successfully",
-				success: true,
-				user,
-				token,
-			});
-		} else {
-			return res.status(500).json({
-				message: "Could not create user",
+		if (existingMerchant) {
+			return res.status(400).json({
+				error: "Merchant with this email already exists",
 			});
 		}
-	} catch {
-		res.status(500).json({
-			message: "Internal server error",
-		});
-	}
-});
 
-router.post("/signin", async (req, res) => {
-	let { email, password } = req.body;
+		// Hash password
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-	try {
-		const validateUser = await findUser(email);
-		if (validateUser) {
-			const validatePassword = bcrypt.compareSync(
-				password,
-				validateUser?.password
-			);
-
-			if (validatePassword) {
-				const token = jwt.sign({ userId: validateUser?._id }, JWT_SECRET);
-				return res.json({
-					success: true,
-					message: "Signin successfull",
-					user: validateUser,
-					token,
-				});
-			}
-		} else {
-			return res.status(401).json({
-				message: "Invalid credentials",
-			});
-		}
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message,
-		});
-	}
-});
-
-router.put("/update_user", authMiddleware, async (req, res) => {
-	const { firstName, lastName, password } = req.body;
-	const username = req.username;
-	const { success } = userSchema.safeParse({
-		firstName,
-		lastName,
-		username,
-		password,
-	});
-	if (!success)
-		return res.json({
-			msg: "Invalid input",
-		});
-
-	const updatedUser = await User.findOneAndUpdate(
-		{ username },
-
-		{
+		// Create merchant
+		const merchant = await createMerchant(
 			firstName,
 			lastName,
-			password,
-		},
-		{
-			new: true,
-		}
-	);
-	if (updatedUser) {
-		return res.json({
-			updatedUser,
-		});
-	} else {
-		return res.json({
-			msg: "user not found",
-		});
-	}
-});
+			email,
+			hashedPassword,
+			publicKey
+		);
 
-router.post("/verify-password", authMiddleware, async (req, res) => {
-	const password = req.body.password;
-	try {
-		const user = await User.findOne({ username: req.username });
-		const validation = bcrypt.compareSync(password, user.password);
-		if (validation) {
-			return res.status(200).json({ msg: true });
-		} else {
-			throw new error();
-		}
-	} catch (err) {
-		return res.json({
-			msg: false,
+		// Remove sensitive data before sending response
+		const { password: _, ...merchantData } = merchant;
+
+		res.status(201).json({
+			message: "Merchant created successfully",
+			merchant: merchantData,
+		});
+	} catch (error) {
+		console.error("Error creating merchant:", error);
+		res.status(500).json({
+			error: "Internal server error",
 		});
 	}
 });
 
-router.get("/get-users", authMiddleware, async (req, res) => {
-	let filter = req.query.filter || "";
-
-	console.log(filter);
+// Merchant login
+router.post("/signin", async (req, res) => {
 	try {
-		const user = await User.find({
-			username: { $ne: req.username },
-			$or: [
-				{ firstName: { $regex: filter, $options: "i" } },
-				{ lastName: { $regex: filter, $options: "i" } },
-			],
+		const { email, password } = req.body;
+
+		// Find merchant
+		const merchant = await prisma.merchant.findUnique({
+			where: { email },
 		});
 
-		if (user.length) {
-			res.json({
-				users: user,
-			});
-		} else {
-			res.json({
-				users: [],
+		if (!merchant) {
+			return res.status(401).json({
+				error: "Invalid credentials",
 			});
 		}
-	} catch (err) {
-		res.json({ msg: "user not found" });
+
+		// Check password
+		const isPasswordValid = await bcrypt.compare(password, merchant.password);
+
+		if (!isPasswordValid) {
+			return res.status(401).json({
+				error: "Invalid credentials",
+			});
+		}
+
+		// Remove sensitive data before sending response
+		const { password: _, ...merchantData } = merchant;
+
+		res.json({
+			message: "Login successful",
+			merchant: merchantData,
+		});
+	} catch (error) {
+		console.error("Error logging in:", error);
+		res.status(500).json({
+			error: "Internal server error",
+		});
+	}
+});
+
+// Create project
+router.post("/projects", async (req, res) => {
+	try {
+		const { merchantId, name, publicKey, webhookUrl } = req.body;
+
+		// Verify merchant exists
+		const merchant = await prisma.merchant.findUnique({
+			where: { id: merchantId },
+		});
+
+		if (!merchant) {
+			return res.status(404).json({
+				error: "Merchant not found",
+			});
+		}
+
+		// Create project
+		const project = await createProject(merchantId, name, publicKey, webhookUrl);
+
+		res.status(201).json({
+			message: "Project created successfully",
+			project,
+		});
+	} catch (error) {
+		console.error("Error creating project:", error);
+		res.status(500).json({
+			error: "Internal server error",
+		});
+	}
+});
+
+// Get merchant projects
+router.get("/projects/:merchantId", async (req, res) => {
+	try {
+		const { merchantId } = req.params;
+
+		// Verify merchant exists
+		const merchant = await prisma.merchant.findUnique({
+			where: { id: merchantId },
+		});
+
+		if (!merchant) {
+			return res.status(404).json({
+				error: "Merchant not found",
+			});
+		}
+
+		// Get projects
+		const projects = await prisma.project.findMany({
+			where: { merchant_id: merchantId },
+		});
+
+		res.json({
+			projects,
+		});
+	} catch (error) {
+		console.error("Error fetching projects:", error);
+		res.status(500).json({
+			error: "Internal server error",
+		});
 	}
 });
 

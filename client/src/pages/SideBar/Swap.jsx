@@ -1,3 +1,3 @@
 export default function Swap() {
-	return <>Swap</>;
+	return <>This feature is under development</>;
 }

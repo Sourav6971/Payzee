@@ -1,0 +1,26 @@
+-- AlterTable
+ALTER TABLE "Merchant" 
+ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "Project" 
+ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN "name" TEXT,
+ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN "webhookUrl" TEXT;
+
+-- AlterTable
+ALTER TABLE "Transaction" 
+ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN "redirectUrl" TEXT,
+ADD COLUMN "solanaAccount" TEXT,
+ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- Set default values for existing rows
+UPDATE "Project" SET "name" = 'Default Project' WHERE "name" IS NULL;
+UPDATE "Project" SET "webhookUrl" = '' WHERE "webhookUrl" IS NULL;
+
+-- Make columns required
+ALTER TABLE "Project" ALTER COLUMN "name" SET NOT NULL;
+ALTER TABLE "Project" ALTER COLUMN "webhookUrl" SET NOT NULL;

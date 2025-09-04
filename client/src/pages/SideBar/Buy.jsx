@@ -1,5 +1,5 @@
 import SideBar from "../../components/SideBar";
 
 export default function Buy() {
-	return <div className="flex justify-center">Buy</div>;
+	return <div>This feature is under development</div>;
 }

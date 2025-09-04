@@ -17,9 +17,7 @@ export default function Authenticate({ children }) {
 		}
 	}, [session, isAuthenticated]);
 
-	if (!isAuthenticated) {
-		return;
-	}
+	if (!isAuthenticated) return;
 
-	return <>{children}</>;
+	return children;
 }

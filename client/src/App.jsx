@@ -5,9 +5,11 @@ const Landing = React.lazy(() => import("./pages/Landing"));
 const Auth = React.lazy(() => import("./pages/Auth"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const NotFound = React.lazy(() => import("./pages/404"));
+const Docs = React.lazy(() => import("./pages/Docs"));
 const SideMenu = React.lazy(() => import("./pages/SideBar/Index"));
+const Transfer = React.lazy(() => import("./pages/Transfer"));
 
-import Authenticate from "./utils/authenticate";
+import Authenticate from "./utils/authenticateWrapper";
 import ApiContextProvider from "./context/api";
 import { Toaster } from "react-hot-toast";
 import UserContextProvider from "./context/user";
@@ -30,6 +32,16 @@ const ROUTES = [
 		path: "/dashboard/options",
 		element: <SideMenu />,
 		authenticated: true,
+	},
+	{
+		path: "/docs",
+		element: <Docs />,
+		authenticated: false,
+	},
+	{
+		path: "/transfer",
+		element: <Transfer />,
+		authenticated: false,
 	},
 
 	{
