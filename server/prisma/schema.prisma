@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id         String      @id @default(uuid())
+  publicKey  String      @unique
+  firstName  String
+  lastName   String
+  email      String      @unique
+  password   String
+  projects   Project[]
+  transactions Transaction[]
+  api_key    String      @unique
+  api_secret String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Project {
+  id          String       @id @default(uuid())
+  name        String
+  publicKey   String
+  webhookUrl  String
+  merchant_id String
+  merchant    Merchant     @relation(fields: [merchant_id], references: [id])
+  transactions Transaction[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Transaction {
+  id             String   @id @default(uuid())
+  toKey          String
+  fromKey        String
+  amount         Int
+  txId           String?  @unique
+  status         Status   @default(pending)
+  mode           Mode     @default(other)
+  project_id     String
+  project        Project  @relation(fields: [project_id], references: [id])
+  merchant_id    String
+  merchant       Merchant @relation(fields: [merchant_id], references: [id])
+  redirectUrl    String?
+  solanaAccount  String?  // New account for Solana payment
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum Status {
+  pending
+  success
+  failed
+}
+
+enum Mode {
+  phantom
+  other
+}

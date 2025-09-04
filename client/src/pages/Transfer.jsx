@@ -5,13 +5,6 @@ import QRCode from "react-qr-code";
 import { FiCopy } from "react-icons/fi";
 import { MdDone } from "react-icons/md";
 
-import {
-	clusterApiUrl,
-	Connection,
-	PublicKey,
-	SystemProgram,
-	Transaction,
-} from "@solana/web3.js";
 import { UserContext } from "../context/user/context";
 
 const toKey = import.meta.env.VITE_APP_PUBLIC_KEY;
