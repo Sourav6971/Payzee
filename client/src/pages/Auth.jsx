@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { FaEyeSlash } from "react-icons/fa";
-import { Input } from "../components/ui/Index";
+import Input from "../components/ui/Input";
 import { AiFillEye } from "react-icons/ai";
 import { UserContext } from "../context/user/context";
 import { ApiContext } from "../context/api/context";
@@ -17,6 +17,7 @@ const Auth = () => {
 		confirmPassword: "",
 	});
 	const [loading, setLoading] = useState(false);
+	const [toggleView, setToggleView] = useState(false);
 
 	const navigate = useNavigate();
 	const { setUser } = useContext(UserContext);
@@ -25,13 +26,13 @@ const Auth = () => {
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (token) navigate("/dashboard");
-	}, [loading]);
+	}, []);
 
 	const handleSignin = async () => {
 		setLoading(true);
 		const config = {
 			method: "POST",
-			url: "api/v1/user/signin",
+			url: "/api/v1/user/signin",
 			data: formData,
 		};
 		const response = await makeApiRequest(config);
@@ -42,6 +43,7 @@ const Auth = () => {
 		setUser(response?.user);
 		localStorage.setItem("token", response?.token);
 		setLoading(false);
+		navigate("/dashboard");
 	};
 
 	const handleSignup = async () => {
@@ -54,7 +56,7 @@ const Auth = () => {
 		}
 		const config = {
 			method: "POST",
-			url: "api/user/signup",
+			url: "/api/v1/user/signup",
 			data: formData,
 		};
 		const response = await makeApiRequest(config);
@@ -65,15 +67,16 @@ const Auth = () => {
 		setUser(response?.user);
 		localStorage.setItem("token", response?.token);
 		setLoading(false);
+		navigate("/dashboard");
 	};
 
 	return (
 		<>
-			<div className="min-h-screen flex justify-center  ">
+			<div className="min-h-screen flex justify-center">
 				<div className="mt-40">
 					{authType === "signin" ? (
 						<div className="flex flex-col gap-4 px-8 py-10 bg-white h-[500px]">
-							<img src="logo.png" width={70} className="mb-4" />
+							<img src="/logo.png" width={70} className="mb-4" alt="Logo" />
 							<Input
 								type={"email"}
 								placeholder={"Email"}
@@ -97,13 +100,14 @@ const Auth = () => {
 								{toggleView ? <AiFillEye /> : <FaEyeSlash />}
 							</div>
 							<button
-								className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl "
+								className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl"
 								onClick={handleSignin}
+								disabled={loading}
 							>
-								Signin
+								{loading ? "Signing in..." : "Signin"}
 							</button>
 							<span className="flex justify-center text-sm text-slate-700 cursor-pointer">
-								Don't have an account ?{" "}
+								Don't have an account?{" "}
 								<span
 									className="ml-1 text-blue-800"
 									onClick={() => setAuthType("signup")}
@@ -114,7 +118,7 @@ const Auth = () => {
 						</div>
 					) : (
 						<div className="flex flex-col gap-4 px-8 py-10 bg-white min-h-[560px]">
-							<img src="logo.png" width={70} className="mb-4" />
+							<img src="/logo.png" width={70} className="mb-4" alt="Logo" />
 							<Input
 								type={"email"}
 								placeholder={"Email"}
@@ -149,13 +153,14 @@ const Auth = () => {
 								{toggleView ? <AiFillEye /> : <FaEyeSlash />}
 							</div>
 							<button
-								className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl "
+								className="bg-blue-700 text-white hover:bg-blue-800 cursor-pointer py-4 rounded-xl"
 								onClick={handleSignup}
+								disabled={loading}
 							>
-								Signup
+								{loading ? "Signing up..." : "Signup"}
 							</button>
 							<span className="flex justify-center text-sm text-slate-700 cursor-pointer">
-								Already have an account ?{" "}
+								Already have an account?{" "}
 								<span
 									className="ml-1 text-blue-800"
 									onClick={() => setAuthType("signin")}
