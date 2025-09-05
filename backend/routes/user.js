@@ -1,157 +1,149 @@
 const { Router } = require("express");
-const { createMerchant, createProject } = require("../utils/database");
-const { generateAPI } = require("../scripts/db");
+const { merchantSignup, projectInput } = require("../utils/zod");
+const jwt = require("jsonwebtoken");
+const {
+	createMerchant,
+	findMerchant,
+	createProject,
+	findProjectById,
+	findProjects,
+} = require("../utils/db");
 const bcrypt = require("bcryptjs");
-const { PrismaClient } = require("@prisma/client");
+const { authMiddleware } = require("../middlewares");
 
 const router = Router();
-const prisma = new PrismaClient();
 
-// Merchant signup
 router.post("/signup", async (req, res) => {
-	try {
-		const { firstName, lastName, email, password, publicKey } = req.body;
-
-		// Check if merchant already exists
-		const existingMerchant = await prisma.merchant.findUnique({
-			where: { email },
-		});
-
-		if (existingMerchant) {
-			return res.status(400).json({
-				error: "Merchant with this email already exists",
-			});
-		}
-
-		// Hash password
-		const saltRounds = 10;
-		const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-		// Create merchant
-		const merchant = await createMerchant(
-			firstName,
-			lastName,
-			email,
-			hashedPassword,
-			publicKey
-		);
-
-		// Remove sensitive data before sending response
-		const { password: _, ...merchantData } = merchant;
-
-		res.status(201).json({
-			message: "Merchant created successfully",
-			merchant: merchantData,
-		});
-	} catch (error) {
-		console.error("Error creating merchant:", error);
-		res.status(500).json({
-			error: "Internal server error",
+	const body = req.body;
+	const inputResponse = merchantSignup.safeParse(body);
+	if (!inputResponse?.success) {
+		return res.status(400).json({
+			message: "Invalid input types",
 		});
 	}
-});
+	const { publicKey, firstName, lastName, email, password } =
+		inputResponse?.data;
 
-// Merchant login
+	const hashedPassword = bcrypt.hashSync(password);
+
+	const existingMerchant = await findMerchant(email);
+	if (existingMerchant?.success) {
+		return res.status(409).json({
+			message: "User already exists",
+		});
+	}
+
+	const createMerchantResponse = await createMerchant(
+		publicKey,
+		firstName,
+		lastName,
+		email,
+		hashedPassword
+	);
+	if (!createMerchantResponse?.success) {
+		return res.status(500).json({
+			message: "Internal server error!",
+		});
+	}
+	const token = jwt.sign(
+		{ id: createMerchantResponse?.id, publicKey },
+		process.env.JWT_SECRET
+	);
+	return res.status(201).json({
+		message: "User created successfully!",
+		id: createMerchantResponse?.id,
+		token,
+	});
+});
 router.post("/signin", async (req, res) => {
-	try {
-		const { email, password } = req.body;
+	const { email, password } = req.body;
 
-		// Find merchant
-		const merchant = await prisma.merchant.findUnique({
-			where: { email },
-		});
-
-		if (!merchant) {
-			return res.status(401).json({
-				error: "Invalid credentials",
-			});
-		}
-
-		// Check password
-		const isPasswordValid = await bcrypt.compare(password, merchant.password);
-
-		if (!isPasswordValid) {
-			return res.status(401).json({
-				error: "Invalid credentials",
-			});
-		}
-
-		// Remove sensitive data before sending response
-		const { password: _, ...merchantData } = merchant;
-
-		res.json({
-			message: "Login successful",
-			merchant: merchantData,
-		});
-	} catch (error) {
-		console.error("Error logging in:", error);
-		res.status(500).json({
-			error: "Internal server error",
+	if (!email || !password) {
+		return res.status(400).json({
+			message: "Email or password missing",
 		});
 	}
+
+	const merchantResponse = await findMerchant(email);
+	if (!merchantResponse?.success) {
+		return res.status(404).json({
+			message: "User does not exist",
+		});
+	}
+	console.log(merchantResponse);
+
+	const comparisonResponse = await bcrypt.compareSync(
+		password,
+		merchantResponse?.merchant?.password
+	);
+	if (!comparisonResponse) {
+		return res.status(401).json({
+			message: "Wrong passoword",
+		});
+	}
+
+	let token = jwt.sign(
+		{
+			id: merchantResponse?.merchant?.id,
+			publicKey: merchantResponse?.merchant?.publicKey,
+		},
+		process.env.JWT_SECRET
+	);
+	return res.json({
+		message: "User signed in",
+		token,
+	});
 });
 
-// Create project
-router.post("/projects", async (req, res) => {
-	try {
-		const { merchantId, name, publicKey, webhookUrl } = req.body;
-
-		// Verify merchant exists
-		const merchant = await prisma.merchant.findUnique({
-			where: { id: merchantId },
-		});
-
-		if (!merchant) {
-			return res.status(404).json({
-				error: "Merchant not found",
-			});
-		}
-
-		// Create project
-		const project = await createProject(merchantId, name, publicKey, webhookUrl);
-
-		res.status(201).json({
-			message: "Project created successfully",
-			project,
-		});
-	} catch (error) {
-		console.error("Error creating project:", error);
-		res.status(500).json({
-			error: "Internal server error",
+router.post("/project", authMiddleware, async (req, res) => {
+	const body = req.body;
+	let publicKey;
+	const inputResponse = projectInput.safeParse(body);
+	if (!inputResponse?.success) {
+		return res.status(400).json({
+			message: "Invalid or missing data",
 		});
 	}
+	if (!inputResponse?.data?.publicKey) publicKey = req.publicKey;
+	const merchantId = req.merchantId;
+
+	const { name, webhookUrl } = inputResponse?.data;
+	const projectCreateResponse = await createProject(
+		name,
+		webhookUrl,
+		merchantId,
+		publicKey
+	);
+	if (!projectCreateResponse?.success) {
+		return res.status(500).json({
+			message: projectCreateResponse?.message,
+		});
+	}
+	return res.status(201).json({
+		message: "Project created successfully",
+		project: projectCreateResponse?.project,
+	});
 });
 
-// Get merchant projects
-router.get("/projects/:merchantId", async (req, res) => {
-	try {
-		const { merchantId } = req.params;
-
-		// Verify merchant exists
-		const merchant = await prisma.merchant.findUnique({
-			where: { id: merchantId },
-		});
-
-		if (!merchant) {
-			return res.status(404).json({
-				error: "Merchant not found",
-			});
-		}
-
-		// Get projects
-		const projects = await prisma.project.findMany({
-			where: { merchant_id: merchantId },
-		});
-
-		res.json({
-			projects,
-		});
-	} catch (error) {
-		console.error("Error fetching projects:", error);
-		res.status(500).json({
-			error: "Internal server error",
+router.get("/project", authMiddleware, async (req, res) => {
+	const projectId = req.query.projectId;
+	const merchantId = req.merchantId;
+	let projectResponse;
+	if (!projectId) {
+		projectResponse = await findProjects(merchantId);
+	} else {
+		projectResponse = await findProjectById(projectId, merchantId);
+	}
+	if (!projectResponse?.success) {
+		return res.status(500).json({
+			message: projectResponse?.message,
 		});
 	}
+
+	return res.json({
+		message: "Project fetched successfully",
+		project: projectResponse?.project,
+	});
 });
 
 module.exports = router;

@@ -15,15 +15,15 @@ datasource db {
 
 model Merchant {
   id         String      @id @default(uuid())
-  publicKey  String      @unique
+  publicKey  String?      @unique
   firstName  String
   lastName   String
   email      String      @unique
   password   String
   projects   Project[]
   transactions Transaction[]
-  api_key    String      @unique
-  api_secret String      @unique
+  api_key    String?      @unique
+  api_secret String?     @unique
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 }
@@ -31,7 +31,7 @@ model Merchant {
 model Project {
   id          String       @id @default(uuid())
   name        String
-  publicKey   String
+  publicKey   String?
   webhookUrl  String
   merchant_id String
   merchant    Merchant     @relation(fields: [merchant_id], references: [id])
