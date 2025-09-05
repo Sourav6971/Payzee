@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 app.post("/api/payment", async (req, res) => {
 	try {
 		const { amount, projectId } = req.body;
-		
+
 		// Validate project exists
 		const project = await getProjectById(projectId);
 		if (!project) {
@@ -41,10 +41,10 @@ app.post("/api/payment", async (req, res) => {
 				error: "Project does not exist",
 			});
 		}
-		
+
 		// Create a new Solana account for this payment
 		const paymentAccount = createPaymentAccount();
-		
+
 		// Create transaction record
 		const transaction = await prisma.transaction.create({
 			data: {
@@ -57,7 +57,7 @@ app.post("/api/payment", async (req, res) => {
 				redirectUrl: `/payment/${paymentAccount.publicKey}`, // Temporary redirect URL
 			},
 		});
-		
+
 		// Add to processing queue
 		await init();
 		await enqueueTransaction(transaction.id, {
@@ -65,14 +65,18 @@ app.post("/api/payment", async (req, res) => {
 			amount: amount,
 			solanaAccount: paymentAccount.publicKey,
 		});
-		
+
 		// Return payment details
 		res.status(201).json({
 			message: "Payment initiated successfully",
 			transactionId: transaction.id,
 			amount: transaction.amount,
 			solanaAccount: paymentAccount.publicKey,
-			redirectUrl: `${process.env.FRONTEND_URL || "http://localhost:3000"}/pay/${transaction.id}`,
+			redirectUrl: `${
+				process.env.FRONTEND_URL || "http://localhost:3000"
+			}/pay?transactionId=${transaction?.id}&publicKey=${
+				paymentAccount?.publicKey
+			}`,
 		});
 	} catch (error) {
 		console.error("Error initiating payment:", error);
@@ -86,25 +90,25 @@ app.post("/api/payment", async (req, res) => {
 app.get("/pay/:transactionId", async (req, res) => {
 	try {
 		const { transactionId } = req.params;
-		
+
 		// Get transaction details
 		const transaction = await prisma.transaction.findUnique({
 			where: { id: transactionId },
 			include: { project: true },
 		});
-		
+
 		if (!transaction) {
 			return res.status(404).json({
 				error: "Transaction not found",
 			});
 		}
-		
+
 		if (transaction.status !== "pending") {
 			return res.status(400).json({
 				error: "Transaction is not pending",
 			});
 		}
-		
+
 		// In a real implementation, this would serve an HTML page
 		// For now, we'll return JSON with payment details
 		res.json({
@@ -112,7 +116,8 @@ app.get("/pay/:transactionId", async (req, res) => {
 			amount: transaction.amount,
 			solanaAccount: transaction.solanaAccount,
 			projectName: transaction.project.name,
-			instructions: "Send the exact amount of SOL to the provided Solana account address",
+			instructions:
+				"Send the exact amount of SOL to the provided Solana account address",
 		});
 	} catch (error) {
 		console.error("Error fetching payment details:", error);
@@ -127,12 +132,12 @@ app.post("/api/webhook/:projectId", async (req, res) => {
 	try {
 		const { projectId } = req.params;
 		const eventData = req.body;
-		
+
 		// In a production environment, you would verify the webhook signature here
 		// For now, we'll just log the event
-		
+
 		console.log(`Webhook received for project ${projectId}:`, eventData);
-		
+
 		res.status(200).json({
 			message: "Webhook received",
 		});
@@ -148,9 +153,9 @@ app.post("/api/webhook/:projectId", async (req, res) => {
 app.post("/api/process/:transactionId", async (req, res) => {
 	try {
 		const { transactionId } = req.params;
-		
+
 		const result = await processPayment(transactionId);
-		
+
 		res.json({
 			message: "Payment processing completed",
 			result,
@@ -168,16 +173,16 @@ app.post("/api/process-queue", async (req, res) => {
 	try {
 		await init();
 		const tx = await consumeTransaction();
-		
+
 		if (!tx) {
 			return res.json({ msg: "No transaction in queue" });
 		}
-		
+
 		// Process the payment
 		const result = await processPayment(tx.transactionId);
-		
-		res.json({ 
-			msg: "Transaction processed", 
+
+		res.json({
+			msg: "Transaction processed",
 			transaction: tx,
 			result,
 		});
@@ -191,18 +196,18 @@ app.post("/api/process-queue", async (req, res) => {
 app.get("/api/transaction/:transactionId", async (req, res) => {
 	try {
 		const { transactionId } = req.params;
-		
+
 		const transaction = await prisma.transaction.findUnique({
 			where: { id: transactionId },
 			include: { project: true },
 		});
-		
+
 		if (!transaction) {
 			return res.status(404).json({
 				error: "Transaction not found",
 			});
 		}
-		
+
 		res.json({
 			transaction,
 		});
