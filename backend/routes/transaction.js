@@ -32,17 +32,6 @@ router.post("/", async (req, res) => {
 		});
 	}
 	const { amount, mode, projectId } = parsedResponse?.data;
-	const createTransactionResponse = await createTransaction(
-		amount,
-		mode,
-		projectId,
-		authorizedMerchant?.merchant?.id
-	);
-	if (!createTransactionResponse?.success) {
-		return res.status(500).json({
-			message: "Server error, retry",
-		});
-	}
 
 	const generateResponse = await generateKeypair();
 	if (!generateResponse?.success) {
@@ -52,6 +41,18 @@ router.post("/", async (req, res) => {
 	}
 	const { publicKey, secretKey } = generateResponse?.data;
 	console.log(publicKey, secretKey);
+	const createTransactionResponse = await createTransaction(
+		amount,
+		mode,
+		projectId,
+		authorizedMerchant?.merchant?.id,
+		publicKey
+	);
+	if (!createTransactionResponse?.success) {
+		return res.status(500).json({
+			message: "Server error, retry",
+		});
+	}
 
 	let redirectUrl = process.env.APP_URL ?? "http://localhost:5173/transfer";
 	redirectUrl += `?transactionId=${createTransactionResponse?.transaction?.id}&publicKey=${publicKey}`;

@@ -3,7 +3,13 @@ const bcrypt = require("bcryptjs");
 
 const prisma = new PrismaClient();
 
-async function createTransaction(amount, mode, projectId, merchantId) {
+async function createTransaction(
+	amount,
+	mode,
+	projectId,
+	merchantId,
+	solanaAccount
+) {
 	try {
 		const transaction = await prisma.transaction.create({
 			data: {
@@ -11,6 +17,8 @@ async function createTransaction(amount, mode, projectId, merchantId) {
 				merchant_id: merchantId,
 				mode,
 				project_id: projectId,
+				solanaAccount,
+				status: "pending",
 			},
 		});
 		return { success: true, transaction };
@@ -38,4 +46,24 @@ async function findAuthorizedMercant(apiKey, apiSecret) {
 	}
 }
 
-module.exports = { createTransaction, findAuthorizedMercant };
+async function updateTransaction(publicKey, txId) {
+	try {
+		await prisma.transaction.update({
+			where: {
+				solanaAccount: publicKey,
+			},
+			data: {
+				txId,
+				status: "success",
+			},
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+module.exports = {
+	createTransaction,
+	findAuthorizedMercant,
+	updateTransaction,
+};

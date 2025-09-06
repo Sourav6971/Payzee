@@ -51,7 +51,7 @@ model Transaction {
   merchant_id    String
   merchant       Merchant @relation(fields: [merchant_id], references: [id])
   redirectUrl    String?
-  solanaAccount  String?  // New account for Solana payment
+  solanaAccount  String  @unique
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
