@@ -42,8 +42,6 @@ model Project {
 
 model Transaction {
   id             String   @id @default(uuid())
-  toKey          String
-  fromKey        String
   amount         Int
   txId           String?  @unique
   status         Status   @default(pending)

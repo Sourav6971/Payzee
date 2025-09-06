@@ -7,8 +7,6 @@ import { MdDone } from "react-icons/md";
 
 import { UserContext } from "../context/user/context";
 
-const toKey = import.meta.env.VITE_APP_PUBLIC_KEY;
-
 export default function Transfer() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [copy, setCopy] = useState(false);
@@ -32,11 +30,8 @@ export default function Transfer() {
 		}
 	}, [provider, wallet]);
 
-	// const timeStamp = searchParams.get("timeStamp");
-	// const expiry = new Date();
-
-	// const newMinutes = expiry.getMinutes() + 10;
-	// expiry.setMinutes(newMinutes);
+	// const transactionId = searchParams.get("transactionId");
+	const publicKey = searchParams.get("publicKey");
 
 	return (
 		<div className="h-screen">
@@ -44,15 +39,15 @@ export default function Transfer() {
 				<div className="my-auto shadow px-10 bg-white py-12 ">
 					<img src="logo.png" width={100} className=" mb-14" />
 					<span className=" flex justify-center">
-						<QRCode value={toKey} />
+						<QRCode value={publicKey} />
 					</span>
 					<span className="flex justify-center text-2xl m-4">Scan QR</span>
 					<div className="flex gap-4 mt-10 shadow p-4 rounded">
-						<input value={toKey} className="outline-none" disabled={true} />
+						<input value={publicKey} className="outline-none" disabled={true} />
 						<span
 							className=" flex flex-col justify-center cursor-pointer"
 							onClick={() => {
-								navigator.clipboard.writeText(toKey);
+								navigator.clipboard.writeText(publicKey);
 								setCopy(true);
 								setTimeout(() => setCopy(false), 2000);
 							}}
@@ -65,7 +60,7 @@ export default function Transfer() {
 							className="px-5 py-2 text-white font-mono cursor-pointer rounded-2xl "
 							style={{ background: "rgb(171 159 242)" }}
 							onClick={async () => {
-								await paySol(0.001, toKey, wallet);
+								await paySol(0.001, publicKey, wallet);
 							}}
 						>
 							<span className=" flex gap-4">

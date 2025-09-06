@@ -14,4 +14,10 @@ const projectInput = z.object({
 	webhookUrl: z.string().trim(),
 });
 
-module.exports = { merchantSignup, projectInput };
+const transactionInput = z.object({
+	amount: z.number(),
+	mode: z.string().trim().optional(),
+	projectId: z.string().trim(),
+});
+
+module.exports = { merchantSignup, projectInput, transactionInput };

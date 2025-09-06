@@ -7,9 +7,11 @@ const {
 	createProject,
 	findProjectById,
 	findProjects,
+	updateMerchant,
 } = require("../utils/db");
 const bcrypt = require("bcryptjs");
 const { authMiddleware } = require("../middlewares");
+const { generateAPI } = require("../scripts/api");
 
 const router = Router();
 
@@ -143,6 +145,30 @@ router.get("/project", authMiddleware, async (req, res) => {
 	return res.json({
 		message: "Project fetched successfully",
 		project: projectResponse?.project,
+	});
+});
+
+router.put("/", authMiddleware, async (req, res) => {
+	const merchantId = req.merchantId;
+	const { apiKey, apiSecret } = await generateAPI();
+	console.log(apiKey, apiSecret);
+	const merchant = await findMerchant(merchantId);
+	if (!merchant) {
+		return res.status(404).json({
+			message: "User does not exist",
+		});
+	}
+	const updateApiResponse = await updateMerchant(apiKey, apiSecret, merchantId);
+	if (!updateApiResponse?.success) {
+		return res.status(500).json({
+			message: "Internal server error",
+		});
+	}
+
+	return res.status(200).json({
+		message: "Update successfull",
+		apiKey: updateApiResponse?.apiKey,
+		apiSecret: updateApiResponse?.apiSecret,
 	});
 });
 

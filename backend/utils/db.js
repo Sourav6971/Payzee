@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 
 const prisma = new PrismaClient();
 
@@ -41,6 +42,26 @@ async function findMerchant(email) {
 		return { success: false };
 	}
 }
+async function updateMerchant(apiKey, apiSecret, merchantId) {
+	const hashedApiSecret = await bcrypt.hashSync(apiSecret);
+	try {
+		await prisma.merchant.update({
+			where: {
+				id: merchantId,
+			},
+			data: {
+				api_key: apiKey,
+				api_secret: hashedApiSecret,
+			},
+		});
+		//The user can see the apikey and apisecret only once. He needs to save the apiKey and the apiSecret
+		return { success: true, apiKey, apiSecret };
+	} catch (error) {
+		console.error(error);
+		return { success: false };
+	}
+}
+
 async function createProject(name, webhookUrl, merchantId, publicKey) {
 	try {
 		const existingProject = await prisma.project.findFirst({
@@ -104,6 +125,7 @@ async function findProjects(merchantId) {
 
 module.exports = {
 	createMerchant,
+	updateMerchant,
 	findMerchant,
 	createProject,
 	findProjectById,
