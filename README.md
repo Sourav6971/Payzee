@@ -50,5 +50,5 @@ A secure, scalable payment gateway for Solana blockchain transactions.
 - Dashboard for merchants to view transaction history
 - Support for multiple Solana wallets
 - Advanced analytics and reporting
-- Multi-currency support
+- Multi-currency support(not yet implemented)
 - Rate limiting and DDoS protection
