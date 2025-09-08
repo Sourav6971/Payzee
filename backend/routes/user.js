@@ -8,10 +8,12 @@ const {
 	findProjectById,
 	findProjects,
 	updateMerchant,
+	findMerchantById,
 } = require("../utils/db");
 const bcrypt = require("bcryptjs");
 const { authMiddleware } = require("../middlewares");
-const { generateAPI } = require("../scripts/api");
+const { JWT_SECRET } = require("../config");
+const { verifyPublicKey } = require("../utils/solana");
 
 const router = Router();
 
@@ -21,12 +23,19 @@ router.post("/signup", async (req, res) => {
 	if (!inputResponse?.success) {
 		return res.status(400).json({
 			message: "Invalid input types",
+			errors: inputResponse?.error?.issues,
 		});
 	}
 	const { publicKey, firstName, lastName, email, password } =
 		inputResponse?.data;
 
-	const hashedPassword = bcrypt.hashSync(password);
+	const hashedPassword = await bcrypt.hash(password, 12); // Use async hash with 12 rounds
+	const validPublicKey = await verifyPublicKey(publicKey);
+	if (!validPublicKey) {
+		return res.status(400).json({
+			message: "Invalid public key",
+		});
+	}
 
 	const existingMerchant = await findMerchant(email);
 	if (existingMerchant?.success) {
@@ -44,19 +53,24 @@ router.post("/signup", async (req, res) => {
 	);
 	if (!createMerchantResponse?.success) {
 		return res.status(500).json({
-			message: "Internal server error!",
+			message: createMerchantResponse?.message || "Internal server error!",
 		});
 	}
+
+	// Set token expiration to 24 hours
 	const token = jwt.sign(
 		{ id: createMerchantResponse?.id, publicKey },
-		process.env.JWT_SECRET
+		JWT_SECRET,
+		{ expiresIn: "24h" }
 	);
+
 	return res.status(201).json({
 		message: "User created successfully!",
 		id: createMerchantResponse?.id,
 		token,
 	});
 });
+
 router.post("/signin", async (req, res) => {
 	const { email, password } = req.body;
 
@@ -72,25 +86,27 @@ router.post("/signin", async (req, res) => {
 			message: "User does not exist",
 		});
 	}
-	console.log(merchantResponse);
 
-	const comparisonResponse = await bcrypt.compareSync(
+	const comparisonResponse = await bcrypt.compare(
 		password,
 		merchantResponse?.merchant?.password
 	);
 	if (!comparisonResponse) {
 		return res.status(401).json({
-			message: "Wrong passoword",
+			message: "Wrong password",
 		});
 	}
 
-	let token = jwt.sign(
+	// Set token expiration to 24 hours
+	const token = jwt.sign(
 		{
 			id: merchantResponse?.merchant?.id,
 			publicKey: merchantResponse?.merchant?.publicKey,
 		},
-		process.env.JWT_SECRET
+		JWT_SECRET,
+		{ expiresIn: "24h" }
 	);
+
 	return res.json({
 		message: "User signed in",
 		token,
@@ -99,14 +115,27 @@ router.post("/signin", async (req, res) => {
 
 router.post("/project", authMiddleware, async (req, res) => {
 	const body = req.body;
-	let publicKey;
+	let publicKey = req.publicKey; // Default to user's publicKey
 	const inputResponse = projectInput.safeParse(body);
 	if (!inputResponse?.success) {
 		return res.status(400).json({
 			message: "Invalid or missing data",
+			errors: inputResponse?.error?.issues,
 		});
 	}
-	if (!inputResponse?.data?.publicKey) publicKey = req.publicKey;
+
+	// If a specific publicKey was provided in the request, use that instead
+	if (inputResponse?.data?.publicKey) {
+		publicKey = inputResponse?.data?.publicKey;
+	}
+
+	const validPublicKey = await verifyPublicKey(publicKey);
+	if (!validPublicKey) {
+		return res.status(400).json({
+			message: "Public key is not valid",
+		});
+	}
+
 	const merchantId = req.merchantId;
 
 	const { name, webhookUrl } = inputResponse?.data;
@@ -144,29 +173,27 @@ router.get("/project", authMiddleware, async (req, res) => {
 
 	return res.json({
 		message: "Project fetched successfully",
-		project: projectResponse?.project,
+		projects: projectResponse?.projects || projectResponse?.project,
 	});
 });
 
 router.put("/", authMiddleware, async (req, res) => {
 	const merchantId = req.merchantId;
-	const { apiKey, apiSecret } = await generateAPI();
-	console.log(apiKey, apiSecret);
-	const merchant = await findMerchant(merchantId);
-	if (!merchant) {
+	const merchant = await findMerchantById(merchantId);
+	if (!merchant?.success) {
 		return res.status(404).json({
 			message: "User does not exist",
 		});
 	}
-	const updateApiResponse = await updateMerchant(apiKey, apiSecret, merchantId);
+	const updateApiResponse = await updateMerchant(merchantId);
 	if (!updateApiResponse?.success) {
 		return res.status(500).json({
-			message: "Internal server error",
+			message: updateApiResponse?.message || "Internal server error",
 		});
 	}
 
 	return res.status(200).json({
-		message: "Update successfull",
+		message: "API keys generated successfully",
 		apiKey: updateApiResponse?.apiKey,
 		apiSecret: updateApiResponse?.apiSecret,
 	});

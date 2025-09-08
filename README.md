@@ -1,126 +1,55 @@
-# Payzee Crypto Payment Gateway
+# Payzee - Solana Payment Gateway
 
-A Solana-based crypto payment gateway that allows merchants to accept payments in SOL.
+A secure, scalable payment gateway for Solana blockchain transactions.
 
 ## Features
 
 - Merchant registration and authentication
-- Project creation with webhook URLs
-- Payment initiation with unique Solana accounts
-- Automatic payment detection
-- Webhook notifications to merchants
-- RESTful API for integration
-
-## Architecture
-
-1. **Merchant Signup**: Merchants register with their Solana public key
-2. **Project Creation**: Merchants create projects with webhook URLs
-3. **Payment Initiation**: Customers initiate payments through the merchant's project
-4. **Account Generation**: System generates a unique Solana account for each payment
-5. **Payment Processing**: System monitors Solana accounts for incoming payments
-6. **Webhook Notification**: System notifies merchants via webhooks when payments are received
+- Project management for merchants
+- API key generation for secure transactions
+- Solana transaction processing
+- Automatic transaction verification
+- Webhook notifications (coming soon)
 
 ## API Endpoints
 
-### Merchant Routes
+### Authentication
 
-- `POST /api/signup` - Register a new merchant
-- `POST /api/signin` - Authenticate a merchant
-- `POST /api/projects` - Create a new project
-- `GET /api/projects/:merchantId` - Get all projects for a merchant
+- `POST /api/v1/user/signup` - Register a new merchant
+- `POST /api/v1/user/signin` - Authenticate a merchant
 
-### Payment Routes
+### Merchant Operations
 
-- `POST /api/payment` - Initiate a new payment
-- `GET /pay/:transactionId` - Get payment details for customer
-- `GET /api/transaction/:transactionId` - Get transaction status
-- `POST /api/process/:transactionId` - Manually process a transaction
-- `POST /api/process-queue` - Process transactions from queue
+- `POST /api/v1/user/project` - Create a new project
+- `GET /api/v1/user/project` - List all projects or get a specific project
+- `PUT /api/v1/user/` - Generate new API keys
 
-### Webhook Routes
+### Transaction Processing
 
-- `POST /api/webhook/:projectId` - Receive webhook notifications
+- `POST /api/v1/transaction` - Initiate a new transaction
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Run the server: `npm start`
 
 ## Environment Variables
 
-Create a `.env` file based on `.env.example`:
+- `PORT` - Server port (default: 3000)
+- `JWT_SECRET` - Secret for JWT token signing
+- `API_SALT` - Salt for API key hashing
+- `DATABASE_URL` - PostgreSQL database connection string
+- `MODE` - Application mode (DEV or PROD)
+- `APP_URL` - Application URL for redirects
+- `SOLANA_CLUSTER` - Solana cluster (devnet, testnet, mainnet-beta)
 
-```
-MODE="DEV"
-PORT=3000
+## Future Enhancements
 
-# Database
-POSTGRES_URL="postgresql://user:password@localhost:5432/payzee?schema=public"
-
-# Redis
-REDIS_URL="redis://localhost:6379"
-REDIS_QUEUE_NAME="transactions"
-REDIS_TTL=600
-
-# Solana
-SOLANA_CLUSTER="devnet"
-
-# Frontend URL for redirect URLs
-FRONTEND_URL="http://localhost:3000"
-
-# Security
-JWT_SECRET="your-super-secret-jwt-key"
-```
-
-## Database Schema
-
-The payment gateway uses PostgreSQL with the following tables:
-
-- **Merchant**: Stores merchant information
-- **Project**: Stores merchant projects with webhook URLs
-- **Transaction**: Stores payment transactions
-
-## Installation
-
-1. Clone the repository
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Set up environment variables
-4. Run database migrations:
-   ```
-   npx prisma migrate dev
-   ```
-5. Generate Prisma client:
-   ```
-   npx prisma generate
-   ```
-6. Start the server:
-   ```
-   npm start
-   ```
-
-## Usage
-
-1. Merchant signs up using `/api/signup`
-2. Merchant creates a project using `/api/projects`
-3. Customer initiates payment using `/api/payment`
-4. System generates a unique Solana account for the payment
-5. Customer sends SOL to the generated account
-6. System monitors the account for incoming payments
-7. When payment is detected, system updates transaction status and notifies merchant via webhook
-
-## Webhook Notifications
-
-Merchants receive webhook notifications when payments are processed. The webhook includes:
-
-```json
-{
-  "event": "payment.success",
-  "transactionId": "uuid",
-  "amount": 1000000000,
-  "fromKey": "sender_public_key",
-  "toKey": "recipient_public_key",
-  "timestamp": "2023-01-01T00:00:00Z"
-}
-```
-
-## License
-
-MIT
+- Webhook notifications for transaction status updates
+- Dashboard for merchants to view transaction history
+- Support for multiple Solana wallets
+- Advanced analytics and reporting
+- Multi-currency support
+- Rate limiting and DDoS protection
