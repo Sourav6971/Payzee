@@ -2,11 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 // Create logs directory if it doesn't exist
-const logsDir = path.join(__dirname, '../logs');
+const logsDir = path.join(__dirname, '../../logs');
 if (!fs.existsSync(logsDir)) {
 	fs.mkdirSync(logsDir, { recursive: true });
 }
 
+/**
+ * Log a message with level and metadata
+ * @param {string} level - Log level (info, error, warn, debug)
+ * @param {string} message - Log message
+ * @param {Object} metadata - Additional metadata
+ */
 function log(level, message, metadata = {}) {
 	const timestamp = new Date().toISOString();
 	const logEntry = {

@@ -5,8 +5,12 @@ const {
 	PublicKey,
 } = require("@solana/web3.js");
 const bs58 = require("bs58");
-const { SOLANA_CLUSTER } = require("../config");
+const { SOLANA_CLUSTER } = require("../../config");
 
+/**
+ * Generate a new Solana keypair
+ * @returns {Promise<Object>} Keypair generation result
+ */
 async function generateKeypair() {
 	try {
 		const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER), "confirmed");
@@ -25,6 +29,11 @@ async function generateKeypair() {
 	}
 }
 
+/**
+ * Verify a Solana public key
+ * @param {string} publicKey - Public key to verify
+ * @returns {Promise<boolean>} Whether the public key is valid
+ */
 async function verifyPublicKey(publicKey) {
 	try {
 		// Check if the public key is valid
@@ -37,4 +46,7 @@ async function verifyPublicKey(publicKey) {
 	}
 }
 
-module.exports = { generateKeypair, verifyPublicKey };
+module.exports = { 
+	generateKeypair, 
+	verifyPublicKey 
+};

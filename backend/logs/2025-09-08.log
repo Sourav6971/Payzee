@@ -1,0 +1,13 @@
+{"timestamp":"2025-09-08T12:47:20.028Z","level":"info","message":"Payzee Payment Gateway listening on port 3000","metadata":{}}
+{"timestamp":"2025-09-08T12:47:20.036Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:20.158Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:20.428Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:20.762Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:21.296Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:22.139Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:23.787Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:25.972Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:27.981Z","level":"error","message":"Redis Client Error:","metadata":{"error":"connect ECONNREFUSED 127.0.0.1:6379"}}
+{"timestamp":"2025-09-08T12:47:29.699Z","level":"info","message":"SIGTERM received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T12:47:29.700Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T12:47:30.115Z","level":"info","message":"Connected to Redis successfully","metadata":{}}

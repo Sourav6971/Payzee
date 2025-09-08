@@ -20,4 +20,8 @@ const transactionInput = z.object({
 	projectId: z.string().trim(),
 });
 
-module.exports = { merchantSignup, projectInput, transactionInput };
+module.exports = { 
+	merchantSignup, 
+	projectInput, 
+	transactionInput 
+};
