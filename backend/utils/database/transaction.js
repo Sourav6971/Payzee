@@ -1,7 +1,14 @@
-const { PrismaClient } = require("@prisma/client");
+const { prisma } = require("./client");
 
-const prisma = new PrismaClient();
-
+/**
+ * Create a new transaction
+ * @param {number} amount - Transaction amount
+ * @param {string} mode - Transaction mode
+ * @param {string} projectId - Project ID
+ * @param {string} merchantId - Merchant ID
+ * @param {string} solanaAccount - Solana account
+ * @returns {Promise<Object>} Creation result
+ */
 async function createTransaction(
 	amount,
 	mode,
@@ -79,17 +86,32 @@ async function updateTransaction(publicKey, txId) {
 			return { success: false, message: "Missing required parameters" };
 		}
 
-		const transaction = await prisma.transaction.update({
+		// First, find the transaction by publicKey to get its ID
+		const transaction = await prisma.transaction.findUnique({
 			where: {
 				solanaAccount: publicKey,
+			},
+		});
+
+		if (!transaction) {
+			return { success: false, message: "Transaction not found" };
+		}
+
+		// Then update the transaction using its ID for better precision
+		const updatedTransaction = await prisma.transaction.update({
+			where: {
+				id: transaction.id,
 			},
 			data: {
 				txId,
 				status: "success",
 				updatedAt: new Date(),
 			},
+			include: {
+				project: true, // Include project data for webhook notification
+			},
 		});
-		return { success: true, transaction };
+		return { success: true, transaction: updatedTransaction };
 	} catch (error) {
 		console.error("Error updating transaction:", error);
 		if (error.code === 'P2025') {
@@ -163,10 +185,47 @@ async function updateTransactionStatus(transactionId, status) {
 	}
 }
 
+/**
+ * Update transaction with Solana transaction ID and mark as successful using transaction ID
+ * @param {string} transactionId - Transaction ID
+ * @param {string} txId - Solana transaction ID
+ * @returns {Promise<Object>} Transaction update result
+ */
+async function updateTransactionWithTxId(transactionId, txId) {
+	try {
+		// Validate inputs
+		if (!transactionId || !txId) {
+			return { success: false, message: "Missing required parameters" };
+		}
+
+		const transaction = await prisma.transaction.update({
+			where: {
+				id: transactionId,
+			},
+			data: {
+				txId,
+				status: "success",
+				updatedAt: new Date(),
+			},
+			include: {
+				project: true, // Include project data for webhook notification
+			},
+		});
+		return { success: true, transaction };
+	} catch (error) {
+		console.error("Error updating transaction:", error);
+		if (error.code === 'P2025') {
+			return { success: false, message: "Transaction not found" };
+		}
+		return { success: false, message: "Failed to update transaction" };
+	}
+}
+
 module.exports = {
 	createTransaction,
 	findAuthorizedMerchant,
 	updateTransaction,
 	getTransactionById,
 	updateTransactionStatus,
+	updateTransactionWithTxId,
 };

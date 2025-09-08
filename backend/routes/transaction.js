@@ -1,14 +1,15 @@
 const { Router } = require("express");
-const { transactionInput } = require("../utils/zod");
+const { transactionInput } = require("../utils/validation");
 const {
 	findAuthorizedMerchant,
 	createTransaction,
-} = require("../utils/transaction");
-const { generateKeypair } = require("../utils/solana");
+	getTransactionById,
+} = require("../utils/database");
+const { generateKeypair } = require("../utils/blockchain");
 const { API_URL } = require("../config");
-const { generateHash } = require("../scripts/api");
-
-const { confirmTransaction } = require("../controllers/solana");
+const { generateHash } = require("../utils/api");
+const { addPendingTransaction } = require("../utils/cache");
+const { addTransactionVerificationJob } = require("../workers/queueService");
 
 const router = Router();
 
@@ -27,7 +28,6 @@ const router = Router();
  */
 router.post("/", async (req, res) => {
 	try {
-		// Validate API credentials in headers
 		const apiKey = req.headers["x-api-key"];
 		const apiSecret = req.headers["x-api-secret"];
 
@@ -37,7 +37,6 @@ router.post("/", async (req, res) => {
 			});
 		}
 
-		// Validate request body
 		const body = req.body;
 		const parsedResponse = transactionInput.safeParse(body);
 
@@ -48,7 +47,6 @@ router.post("/", async (req, res) => {
 			});
 		}
 
-		// Authenticate merchant
 		const hashedApiKey = await generateHash(apiKey);
 		const hashedApiSecret = await generateHash(apiSecret);
 
@@ -66,7 +64,6 @@ router.post("/", async (req, res) => {
 		// Extract transaction data
 		const { amount, mode, projectId } = parsedResponse.data;
 
-		// Generate Solana keypair for this transaction
 		const generateResponse = await generateKeypair();
 		if (!generateResponse.success) {
 			return res.status(500).json({
@@ -76,7 +73,6 @@ router.post("/", async (req, res) => {
 
 		const { publicKey } = generateResponse.data;
 
-		// Create transaction record in database
 		const createTransactionResponse = await createTransaction(
 			amount,
 			mode,
@@ -93,14 +89,20 @@ router.post("/", async (req, res) => {
 			});
 		}
 
-		// Start transaction verification process
-		confirmTransaction(publicKey, createTransactionResponse.transaction.id);
+		// Store pending transaction in Redis
+		await addPendingTransaction(
+			createTransactionResponse.transaction.id,
+			publicKey
+		);
 
-		// Generate redirect URL for payment page
+		await addTransactionVerificationJob(
+			publicKey,
+			createTransactionResponse.transaction.id
+		);
+
 		let redirectUrl = API_URL || "http://localhost:5173/transfer";
 		redirectUrl += `?transactionId=${createTransactionResponse.transaction.id}&publicKey=${publicKey}`;
 
-		// Return success response
 		return res.status(201).json({
 			message: "Transaction created successfully",
 			redirectUrl,
@@ -129,8 +131,6 @@ router.get("/:id", async (req, res) => {
 			});
 		}
 
-		// Import the getTransactionById function
-		const { getTransactionById } = require("../utils/transaction");
 		const transactionResponse = await getTransactionById(id);
 
 		if (!transactionResponse.success) {

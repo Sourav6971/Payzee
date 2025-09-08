@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { merchantSignup, projectInput } = require("../utils/zod");
+const { merchantSignup, projectInput } = require("../utils/validation");
 const jwt = require("jsonwebtoken");
 const {
 	createMerchant,
@@ -9,11 +9,11 @@ const {
 	findProjects,
 	updateMerchant,
 	findMerchantById,
-} = require("../utils/db");
-const bcrypt = require("bcryptjs");
+} = require("../utils/database");
+const { hashPassword, comparePassword } = require("../utils/auth");
 const { authMiddleware } = require("../middlewares");
 const { JWT_SECRET } = require("../config");
-const { verifyPublicKey } = require("../utils/solana");
+const { verifyPublicKey } = require("../utils/blockchain");
 
 const router = Router();
 
@@ -29,7 +29,7 @@ router.post("/signup", async (req, res) => {
 	const { publicKey, firstName, lastName, email, password } =
 		inputResponse?.data;
 
-	const hashedPassword = await bcrypt.hash(password, 12); // Use async hash with 12 rounds
+	const hashedPassword = await hashPassword(password, 12); // Use async hash with 12 rounds
 	const validPublicKey = await verifyPublicKey(publicKey);
 	if (!validPublicKey) {
 		return res.status(400).json({
@@ -87,7 +87,7 @@ router.post("/signin", async (req, res) => {
 		});
 	}
 
-	const comparisonResponse = await bcrypt.compare(
+	const comparisonResponse = await comparePassword(
 		password,
 		merchantResponse?.merchant?.password
 	);
