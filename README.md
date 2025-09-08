@@ -6,10 +6,9 @@ A secure, scalable payment gateway for Solana blockchain transactions.
 
 - Merchant registration and authentication
 - Project management for merchants
-- API key generation for secure transactions
-- Solana transaction processing
 - Automatic transaction verification
-- Webhook notifications (coming soon)
+- Support for proxy payments
+- Webhook notifications 
 
 ## API Endpoints
 
