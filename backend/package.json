@@ -25,7 +25,8 @@
 		"migrate": "npx prisma migrate dev",
 		"migrate:deploy": "npx prisma migrate deploy",
 		"studio": "npx prisma studio",
-		"init-db": "node scripts/init-db.js"
+		"init-db": "node scripts/init-db.js",
+		"postinstall": "npx prisma generate"
 	},
 	"devDependencies": {
 		"nodemon": "^3.1.10",

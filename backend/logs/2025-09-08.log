@@ -11,3 +11,27 @@
 {"timestamp":"2025-09-08T12:47:29.699Z","level":"info","message":"SIGTERM received, shutting down gracefully","metadata":{}}
 {"timestamp":"2025-09-08T12:47:29.700Z","level":"info","message":"Process terminated","metadata":{}}
 {"timestamp":"2025-09-08T12:47:30.115Z","level":"info","message":"Connected to Redis successfully","metadata":{}}
+{"timestamp":"2025-09-08T19:32:35.276Z","level":"info","message":"Payzee Payment Gateway listening on port 3000","metadata":{}}
+{"timestamp":"2025-09-08T19:32:37.135Z","level":"info","message":"Connected to Redis successfully","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.127Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.129Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.145Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.146Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.147Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-08T19:32:49.159Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.160Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:32:49.160Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-08T19:32:49.542Z","level":"info","message":"Disconnected from Redis","metadata":{}}
+{"timestamp":"2025-09-08T19:33:05.688Z","level":"info","message":"Payzee Payment Gateway listening on port 3000","metadata":{}}
+{"timestamp":"2025-09-08T19:33:06.927Z","level":"info","message":"Connected to Redis successfully","metadata":{}}
+{"timestamp":"2025-09-08T19:33:57.267Z","level":"info","message":"Payzee Payment Gateway listening on port 3000","metadata":{}}
+{"timestamp":"2025-09-08T19:33:58.872Z","level":"info","message":"Connected to Redis successfully","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.330Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.331Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.350Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.350Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-08T19:34:00.350Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.363Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.364Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-08T19:34:00.364Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-08T19:34:00.723Z","level":"info","message":"Disconnected from Redis","metadata":{}}
