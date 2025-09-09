@@ -1,0 +1,11 @@
+{"timestamp":"2025-09-09T17:17:08.896Z","level":"info","message":"Payzee Payment Gateway listening on port 3000","metadata":{}}
+{"timestamp":"2025-09-09T17:17:10.390Z","level":"info","message":"Connected to Redis successfully","metadata":{}}
+{"timestamp":"2025-09-09T17:24:23.969Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-09T17:24:23.971Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-09T17:24:24.015Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-09T17:24:24.014Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-09T17:24:24.015Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-09T17:24:24.026Z","level":"info","message":"SIGINT received, shutting down gracefully","metadata":{}}
+{"timestamp":"2025-09-09T17:24:24.026Z","level":"info","message":"Process terminated","metadata":{}}
+{"timestamp":"2025-09-09T17:24:24.026Z","level":"error","message":"Error disconnecting from Redis:","metadata":{"error":"The client is closed"}}
+{"timestamp":"2025-09-09T17:24:24.278Z","level":"info","message":"Disconnected from Redis","metadata":{}}

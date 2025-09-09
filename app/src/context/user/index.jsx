@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { UserContext } from "./context";
-import toast from "react-hot-toast";
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { UserContext } from './context';
+import toast from 'react-hot-toast';
 import {
 	clusterApiUrl,
 	Connection,
@@ -8,8 +8,9 @@ import {
 	PublicKey,
 	SystemProgram,
 	Transaction,
-} from "@solana/web3.js";
-import { ApiContext } from "../api/context";
+} from '@solana/web3.js';
+import { ApiContext } from '../api/context';
+import PropTypes from 'prop-types';
 
 export default function UserContextProvider({ children }) {
 	const [user, setUser] = useState(null);
@@ -21,23 +22,21 @@ export default function UserContextProvider({ children }) {
 		await window?.solana?.disconnect();
 		setConnected(false);
 		setWallet(null);
-		toast.error("Wallet disconnected!");
-	}, [connected]);
+	}, []);
 
 	const connectWallet = useCallback(async () => {
 		const response = await window?.solana?.connect();
 		if (response) {
-			toast.success("Wallet connected!");
 			setWallet(await response.publicKey.toBase58());
 			setConnected(true);
-		} else toast.error("Could not find wallet");
+		} else toast.error('Could not find wallet');
 		console.error(response);
-	}, [connected]);
+	}, []);
 
 	const paySol = useCallback(
 		async (amount, toAddress, fromAddress = wallet) => {
 			try {
-				const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+				const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 				const transaction = new Transaction().add(
 					SystemProgram.transfer({
 						fromPubkey: new PublicKey(fromAddress),
@@ -50,22 +49,20 @@ export default function UserContextProvider({ children }) {
 				transaction.recentBlockhash = (
 					await connection.getRecentBlockhash()
 				).blockhash;
-				const signedTransaction = await window?.solana?.signTransaction(
-					transaction
-				);
+				const signedTransaction =
+					await window?.solana?.signTransaction(transaction);
 				const txid = await connection.sendRawTransaction(
 					signedTransaction.serialize()
 				);
-				if (txid) toast.success("Transaction successfull");
-				else throw new Error("Transaction could not be confirmed!");
+				if (txid) toast.success('Transaction successfull');
+				else throw new Error('Transaction could not be confirmed!');
 			} catch (error) {
 				console.error(error);
-				toast.error("Transaction failed, try again!");
+				toast.error('Transaction failed, try again!');
 			}
 		},
 		[wallet]
 	);
-	const userLogin = useCallback(async () => {}, [user]);
 
 	const contextValue = useMemo(
 		() => ({
@@ -84,3 +81,7 @@ export default function UserContextProvider({ children }) {
 		<UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
 	);
 }
+
+UserContextProvider.propTypes = {
+	children: PropTypes.node.isRequired,
+};
