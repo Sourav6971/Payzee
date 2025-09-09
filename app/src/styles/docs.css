@@ -1,0 +1,244 @@
+/* Documentation specific styles */
+.prose {
+	color: #374151;
+	max-width: none;
+}
+
+.prose h1 {
+	font-size: 2.25rem;
+	font-weight: 700;
+	color: #111827;
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+	letter-spacing: -0.025em;
+}
+
+.prose h2 {
+	font-size: 1.875rem;
+	font-weight: 600;
+	color: #111827;
+	margin-top: 2.5rem;
+	margin-bottom: 1.25rem;
+	letter-spacing: -0.025em;
+	border-bottom: 1px solid #e5e7eb;
+	padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: #111827;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	letter-spacing: -0.025em;
+}
+
+.prose h4 {
+	font-size: 1.25rem;
+	font-weight: 500;
+	color: #111827;
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+}
+
+.prose p {
+	margin-top: 0;
+	margin-bottom: 1.25rem;
+	line-height: 1.75;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.prose ul {
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	padding-left: 1.5rem;
+}
+
+.prose ol {
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	padding-left: 1.5rem;
+}
+
+.prose li {
+	margin-bottom: 0.5rem;
+	line-height: 1.75;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.prose code {
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+	font-size: 0.875em;
+	background-color: #f3f4f6;
+	padding: 0.2em 0.4em;
+	border-radius: 0.375rem;
+	color: #374151;
+	font-weight: 400;
+}
+
+.prose pre {
+	background-color: #1f2937;
+	border-radius: 0.5rem;
+	padding: 1.25rem;
+	overflow-x: auto;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	box-shadow:
+		0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.prose pre code {
+	background-color: transparent;
+	color: #f9fafb;
+	padding: 0;
+	font-size: 0.875rem;
+	line-height: 1.7142857;
+	font-weight: 400;
+}
+
+.prose a {
+	color: #2563eb;
+	text-decoration: none;
+	font-weight: 400;
+}
+
+.prose a:hover {
+	color: #1d4ed8;
+	text-decoration: underline;
+}
+
+.prose strong {
+	font-weight: 500;
+}
+
+.prose blockquote {
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	padding-left: 1.25rem;
+	border-left: 4px solid #e5e7eb;
+	color: #6b7280;
+	font-weight: 400;
+}
+
+.prose img {
+	border-radius: 0.5rem;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+}
+
+.prose table {
+	width: 100%;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	table-layout: auto;
+	border-collapse: collapse;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.prose thead {
+	background-color: #f9fafb;
+}
+
+.prose th {
+	padding: 0.75rem 1rem;
+	text-align: left;
+	font-weight: 500;
+	color: #374151;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.prose td {
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.prose tr:last-child td {
+	border-bottom: none;
+}
+
+/* Add a bit more spacing between sections */
+.prose > div > *:first-child {
+	margin-top: 0;
+}
+
+/* Custom utility classes for docs */
+.docs-note {
+	background-color: #eff6ff;
+	border-left: 4px solid #3b82f6;
+	padding: 1rem;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.docs-note p {
+	font-size: 1rem;
+	margin-bottom: 0;
+	font-weight: 400;
+}
+
+.docs-note strong {
+	font-weight: 500;
+}
+
+.docs-warning {
+	background-color: #fffbeb;
+	border-left: 4px solid #f59e0b;
+	padding: 1rem;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.docs-warning p {
+	font-size: 1rem;
+	margin-bottom: 0;
+	font-weight: 400;
+}
+
+.docs-warning strong {
+	font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (min-width: 1024px) {
+	.prose h1 {
+		font-size: 2.5rem;
+		font-weight: 700;
+	}
+
+	.prose h2 {
+		font-size: 2rem;
+		font-weight: 600;
+	}
+
+	.prose h3 {
+		font-size: 1.75rem;
+		font-weight: 500;
+	}
+
+	.prose p,
+	.prose li {
+		font-size: 1rem;
+	}
+}
+
+@media (min-width: 1280px) {
+	.prose h1 {
+		font-size: 2.75rem;
+	}
+
+	.prose h2 {
+		font-size: 2.25rem;
+	}
+
+	.prose h3 {
+		font-size: 1.875rem;
+	}
+}

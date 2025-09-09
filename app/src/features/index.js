@@ -8,3 +8,5 @@ export * from './sidebar';
 // Export standalone components
 export { default as DocsPage } from './DocsPage';
 export { default as NotFoundPage } from './NotFoundPage';
+export { default as PrivacyPolicy } from './PrivacyPolicy';
+export { default as TermsOfService } from './TermsOfService';

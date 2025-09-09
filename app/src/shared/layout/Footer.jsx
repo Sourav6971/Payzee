@@ -1,18 +1,33 @@
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 
 const Footer = () => {
+	const currentYear = new Date().getFullYear();
+
 	return (
-		<div className="w-full shadow text-black flex flex-col min-h-[200px] bg-white md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6 py-6 text-center  bottom-0">
-			<a
-				href="https://github.com/Sourav6971/payzee"
-				target="_blank"
-				rel="noopener noreferrer"
-				className="flex items-center justify-center space-x-2 hover:text-gray-400 transition"
-			>
-				<FaGithub size={20} />
-			</a>
-			<span className="text-3xl">&copy;</span>
-		</div>
+		<footer className="w-full  text-black flex flex-col min-h-[200px] bg-white py-20 text-center bottom-0">
+			<div className="mx-auto px-4 sm:px-6 lg:px-8">
+				{/* Copyright */}
+				<div className="border-t border-gray-200 mt-8 pt-6">
+					<p className="text-gray-500 text-sm">
+						&copy; {currentYear} Payzee. All rights reserved.
+					</p>
+					<div className="flex flex-wrap justify-center gap-4 mt-2">
+						<a
+							href="/privacy"
+							className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
+						>
+							Privacy Policy
+						</a>
+						<a
+							href="/terms"
+							className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
+						>
+							Terms of Service
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
 	);
 };
 

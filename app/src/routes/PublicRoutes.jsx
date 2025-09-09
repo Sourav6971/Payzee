@@ -8,6 +8,8 @@ const AuthPage = lazy(() => import('../features/auth/AuthPage'));
 const DocsPage = lazy(() => import('../features/DocsPage'));
 const NotFoundPage = lazy(() => import('../features/NotFoundPage'));
 const TransferPage = lazy(() => import('../features/transfer/TransferPage'));
+const PrivacyPolicy = lazy(() => import('../features/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('../features/TermsOfService'));
 
 export default function PublicRoutes() {
 	return (
@@ -18,6 +20,8 @@ export default function PublicRoutes() {
 				<Route path="/auth" element={<AuthPage />} />
 				<Route path="/docs" element={<DocsPage />} />
 				<Route path="/transfer" element={<TransferPage />} />
+				<Route path="/privacy" element={<PrivacyPolicy />} />
+				<Route path="/terms" element={<TermsOfService />} />
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</Suspense>
