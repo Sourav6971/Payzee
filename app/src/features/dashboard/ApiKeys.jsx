@@ -28,7 +28,7 @@ export default function ApiKeys() {
 				token: `Bearer ${token}`,
 			});
 
-			if (response?.success) {
+			if (response) {
 				const keys = {
 					apiKey: response.apiKey,
 					apiSecret: response.apiSecret,
