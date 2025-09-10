@@ -72,7 +72,7 @@ export default function DashboardOverview() {
 				token: `Bearer ${token}`,
 			});
 
-			if (response?.success) {
+			if (response) {
 				setProjects(response.projects || []);
 			}
 		} catch (error) {

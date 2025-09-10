@@ -60,7 +60,7 @@ const AuthPage = () => {
 			data: formData,
 		};
 		const response = await makeApiRequest(config);
-		if (!response?.success) {
+		if (!response) {
 			setLoading(false);
 			return;
 		}
